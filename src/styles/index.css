@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*解决ant-design图标垂直居中问题*/
+.anticon {
+  vertical-align: 0.1rem;
+}

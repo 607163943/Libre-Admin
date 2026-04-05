@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue'
+import { useLayoutStore } from '@/stores/modules/layout'
+import { storeToRefs } from 'pinia'
 
 defineOptions({
   name: 'LayoutContainer'
@@ -11,7 +13,10 @@ const drawerOpen = ref<boolean>(false)
 
 // 响应式断点：页面宽度 < 640px 视为移动端
 const windowWidth = ref<number>(typeof window !== 'undefined' ? window.innerWidth : 1280)
-const isMobile = computed(() => windowWidth.value < 640)
+
+const layoutStore = useLayoutStore()
+const { isMobile } = storeToRefs(layoutStore)
+const { setIsMobile } = layoutStore
 
 function onResize() {
   windowWidth.value = window.innerWidth
@@ -19,6 +24,7 @@ function onResize() {
   if (!isMobile.value) {
     drawerOpen.value = false
   }
+  setIsMobile(windowWidth.value < 670)
 }
 
 onMounted(() => window.addEventListener('resize', onResize))
@@ -34,10 +40,16 @@ function handleToggle() {
 }
 </script>
 <template>
-  <a-layout class="h-full">
+  <a-layout class="min-h-dvh">
     <!-- 桌面端侧边栏（≥640px 显示） -->
-    <a-layout-sider v-if="!isMobile" v-model:collapsed="collapsed" :trigger="null" collapsible>
-      <slot name="header-sidebar"></slot>
+    <a-layout-sider
+      v-if="!isMobile"
+      v-model:collapsed="collapsed"
+      :trigger="null"
+      theme="dark"
+      collapsible
+    >
+      <slot name="menu-sidebar" :handleToggle="handleToggle"></slot>
     </a-layout-sider>
 
     <!-- 移动端抽屉（<640px 显示） -->
@@ -49,18 +61,18 @@ function handleToggle() {
       :body-style="{ padding: 0, background: '#001529' }"
       :width="200"
     >
-      <slot name="header-drawer"></slot>
+      <slot name="menu-sidebar" :handleToggle="handleToggle"></slot>
     </a-drawer>
 
-    <a-layout>
+    <a-layout class="min-h-dvh">
       <a-layout-header style="background: #fff; padding: 0">
         <!-- 移动端：显示展开图标作为抽屉开关；桌面端：根据折叠状态切换图标 -->
         <menu-unfold-outlined v-if="isMobile || collapsed" class="trigger" @click="handleToggle" />
         <menu-fold-outlined v-else class="trigger" @click="handleToggle" />
       </a-layout-header>
-      <a-layout-content style="margin: 0 16px">
+      <a-layout-content style="margin: 0 16px" class="flex flex-col">
         <slot name="breadcrumb"></slot>
-        <div :style="{ padding: '24px', background: '#fff' }" class="h-full">
+        <div :style="{ padding: '24px', background: '#fff' }" class="flex-auto">
           <slot name="content"></slot>
         </div>
       </a-layout-content>
@@ -82,15 +94,5 @@ function handleToggle() {
 
 .trigger:hover {
   color: #1890ff;
-}
-
-.logo {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.3);
-  margin: 16px;
-}
-
-.site-layout .site-layout-background {
-  background: #fff;
 }
 </style>
