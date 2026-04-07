@@ -6,3 +6,8 @@
 .anticon {
   vertical-align: 0.1rem;
 }
+
+/*解决ant-design表单布局问题*/
+.ant-form-item {
+  margin-bottom: 0.5rem !important;
+}

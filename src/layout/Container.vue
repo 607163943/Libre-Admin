@@ -24,7 +24,7 @@ function onResize() {
   if (!isMobile.value) {
     drawerOpen.value = false
   }
-  setIsMobile(windowWidth.value < 670)
+  setIsMobile(windowWidth.value < 720)
 }
 
 onMounted(() => window.addEventListener('resize', onResize))

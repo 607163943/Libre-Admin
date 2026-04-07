@@ -60,8 +60,8 @@ const { dialogForm, dialogRule } = toRefs(props)
         :model="dialogForm"
         :rules="dialogRule"
         name="basic"
-        :label-col="{ span: 8 }"
-        :wrapper-col="{ span: 16 }"
+        :label-col="{ span: 6 }"
+        :wrapper-col="{ span: 18 }"
         autocomplete="off"
       >
         <slot />

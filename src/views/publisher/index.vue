@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { UserOutlined, PlusOutlined, DeleteOutlined, SyncOutlined } from '@ant-design/icons-vue'
+import { PlusOutlined, DeleteOutlined, SyncOutlined, BankOutlined } from '@ant-design/icons-vue'
 import type { Rule } from 'ant-design-vue/es/form'
 import SearchForm from '@/components/SearchForm.vue'
 import PageTable from '@/components/PageTable.vue'
@@ -27,6 +27,14 @@ const SearchFormObj = ref<PublisherSearchForm>({
 const SearchFormObjUse = ref<PublisherSearchForm>({
   publisherName: ''
 })
+
+const handleReset = () => {
+  SearchFormObj.value = {
+    publisherName: ''
+  }
+
+  handleSearch()
+}
 
 const handleSearch = () => {
   // 复制一份搜索表单
@@ -112,11 +120,11 @@ const dialogRule: Record<string, Rule[]> = {
 }
 </script>
 <template>
-  <SearchForm :searchForm="SearchFormObj" @search="handleSearch">
+  <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
     <a-form-item label="出版社名" name="publisherName">
       <a-input v-model:value="SearchFormObj.publisherName" placeholder="请输入出版社名">
         <template #prefix>
-          <UserOutlined class="site-form-item-icon" />
+          <BankOutlined class="site-form-item-icon" />
         </template>
       </a-input>
     </a-form-item>

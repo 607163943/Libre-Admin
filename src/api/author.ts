@@ -12,6 +12,11 @@ export const getAuthor = (id: number) => {
   return request.get<Result<AuthorDialogForm>>(`/author/${id}`)
 }
 
+// 获取所有作者
+export const getAllAuthor = () => {
+  return request.get<Result<AuthorDialogForm[]>>('/author/all')
+}
+
 // 添加作者
 export const addAuthor = (data: AuthorDialogForm) => {
   return request.post<Result<void>>('/author', data)

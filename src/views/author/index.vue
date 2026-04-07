@@ -18,6 +18,14 @@ const SearchFormObjUse = ref<AuthorSearchForm>({
   authorName: ''
 })
 
+const handleReset = () => {
+  SearchFormObj.value = {
+    authorName: ''
+  }
+
+  handleSearch()
+}
+
 const handleSearch = () => {
   // 复制一份搜索表单
   SearchFormObjUse.value = { ...SearchFormObj.value }
@@ -102,7 +110,7 @@ const dialogRule: Record<string, Rule[]> = {
 }
 </script>
 <template>
-  <SearchForm :searchForm="SearchFormObj" @search="handleSearch">
+  <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
     <a-form-item label="作者名" name="authorName">
       <a-input v-model:value="SearchFormObj.authorName" placeholder="请输入作者名">
         <template #prefix>

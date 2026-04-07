@@ -16,6 +16,11 @@ export const getPublisher = (id: number) => {
   return request.get<Result<PublisherDialogForm>>(`/publisher/${id}`)
 }
 
+// 获取所有出版社
+export const getAllPublisher = () => {
+  return request.get<Result<PublisherDialogForm[]>>('/publisher/all')
+}
+
 // 添加出版社
 export const addPublisher = (data: PublisherDialogForm) => {
   return request.post<Result<void>>('/publisher', data)
