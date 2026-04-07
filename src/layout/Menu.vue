@@ -5,20 +5,22 @@ import {
   BankOutlined,
   SwapOutlined,
   SafetyCertificateOutlined,
-  SolutionOutlined
+  SolutionOutlined,
+  HomeOutlined
 } from '@ant-design/icons-vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLayoutStore } from '@/stores/modules/layout'
 import { storeToRefs } from 'pinia'
+import { useRoute } from 'vue-router'
 
 defineOptions({
   name: 'LayoutMenu'
 })
 
 const { handleToggle } = defineProps<{ handleToggle: () => void }>()
-
-const selectedKeys = ref<string[]>(['1'])
+const route = useRoute()
+const selectedKeys = ref<string[]>([route.path])
 
 // 处理菜单跳转
 const layoutStore = useLayoutStore()
@@ -34,43 +36,49 @@ const handleSelect = ({ item: { keyName } }: { item: { keyName: string } }) => {
 // 菜单项数组
 const menuItems = [
   {
-    key: '1',
+    key: '/',
+    keyName: 'Home',
+    icon: HomeOutlined,
+    label: '首页'
+  },
+  {
+    key: '/book',
     keyName: 'Book',
     icon: BookOutlined,
     label: '图书管理'
   },
   {
-    key: '2',
+    key: '/author',
     keyName: 'Author',
     icon: UserOutlined,
     label: '作者管理'
   },
   {
-    key: '3',
+    key: '/publisher',
     keyName: 'Publisher',
     icon: BankOutlined,
     label: '出版社管理'
   },
   {
-    key: '4',
+    key: '/lend',
     keyName: 'Lend',
     icon: SwapOutlined,
     label: '借阅管理'
   },
   {
-    key: '5',
+    key: '/user',
     keyName: 'User',
     icon: UserOutlined,
     label: '用户管理'
   },
   {
-    key: '6',
+    key: '/role',
     keyName: 'Role',
     icon: SafetyCertificateOutlined,
     label: '角色管理'
   },
   {
-    key: '7',
+    key: '/user-role',
     keyName: 'UserRole',
     icon: SolutionOutlined,
     label: '用户角色管理'

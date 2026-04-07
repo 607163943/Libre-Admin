@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { message } from 'ant-design-vue'
 
 const instance = axios.create({
   baseURL: '/api',
@@ -27,6 +28,12 @@ instance.interceptors.response.use(
   function (error) {
     // 超出 2xx 范围的状态码都会触发该函数。
     // 对响应错误做点什么
+    const res = error.response
+    if (res.data?.msg) {
+      message.error(res.data.msg)
+    } else {
+      message.error('系统错误，请联系管理员！')
+    }
     return Promise.reject(error)
   }
 )

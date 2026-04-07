@@ -10,3 +10,8 @@ export interface PageResult<T> {
   size: number
   data: T
 }
+
+export interface PageParams {
+  page: number
+  pageSize: number
+}
