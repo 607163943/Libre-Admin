@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { PlusOutlined, DeleteOutlined, SyncOutlined, BankOutlined } from '@ant-design/icons-vue'
+import { BankOutlined } from '@ant-design/icons-vue'
 import type { Rule } from 'ant-design-vue/es/form'
 import SearchForm from '@/components/SearchForm.vue'
 import PageTable from '@/components/PageTable.vue'
 import EditDialog from '@/components/EditDialog.vue'
+import ButtonGroup from '@/components/ButtonGroup.vue'
+import Input from '@/components/Input.vue'
 import type {
   PublisherDialogForm,
   PublisherSearchForm,
@@ -122,18 +124,15 @@ const dialogRule: Record<string, Rule[]> = {
 <template>
   <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
     <a-form-item label="出版社名" name="publisherName">
-      <a-input v-model:value="SearchFormObj.publisherName" placeholder="请输入出版社名">
-        <template #prefix>
-          <BankOutlined class="site-form-item-icon" />
-        </template>
-      </a-input>
+      <Input
+        v-model:value="SearchFormObj.publisherName"
+        placeholder="请输入出版社名"
+        :icon="BankOutlined"
+      />
     </a-form-item>
   </SearchForm>
-  <div class="mt-2 space-x-3">
-    <a-button type="primary" @click="() => showModal('add')"> <PlusOutlined />新增 </a-button>
-    <a-button type="primary" danger> <DeleteOutlined />删除 </a-button>
-    <a-button @click="handleSearch"><SyncOutlined /> 刷新</a-button>
-  </div>
+
+  <ButtonGroup @add="() => showModal('add')" @refresh="handleSearch" />
 
   <PageTable
     v-model:pageParams="pageParams"
@@ -163,7 +162,7 @@ const dialogRule: Record<string, Rule[]> = {
     :handleEdit="handleEdit"
   >
     <a-form-item label="出版社名" name="publisherName">
-      <a-input v-model:value="dialogForm.publisherName" />
+      <Input v-model:value="dialogForm.publisherName" placeholder="请输入出版社名" />
     </a-form-item>
   </EditDialog>
 </template>

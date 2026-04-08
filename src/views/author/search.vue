@@ -1,0 +1,33 @@
+<script setup lang="ts">
+import { UserOutlined } from '@ant-design/icons-vue'
+import SearchForm from '@/components/SearchForm.vue'
+import { useAuthorStore } from '@/stores/modules/author'
+import Input from '@/components/Input.vue'
+import { storeToRefs } from 'pinia'
+defineOptions({
+  name: 'AuthorSearch'
+})
+
+const authorStore = useAuthorStore()
+const { SearchFormObj } = storeToRefs(authorStore)
+const { handleSearch } = authorStore
+
+const handleReset = () => {
+  SearchFormObj.value = {
+    authorName: ''
+  }
+
+  handleSearch()
+}
+</script>
+<template>
+  <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
+    <a-form-item label="作者名" name="authorName">
+      <Input
+        v-model:value="SearchFormObj.authorName"
+        placeholder="请输入作者名"
+        :icon="UserOutlined"
+      />
+    </a-form-item>
+  </SearchForm>
+</template>

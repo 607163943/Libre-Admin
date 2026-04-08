@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import {
-  PlusOutlined,
-  DeleteOutlined,
-  SyncOutlined,
-  BookOutlined,
-  FontColorsOutlined,
-  GlobalOutlined
-} from '@ant-design/icons-vue'
+import { BookOutlined, FontColorsOutlined, GlobalOutlined } from '@ant-design/icons-vue'
 import type { Rule } from 'ant-design-vue/es/form'
 import SearchForm from '@/components/SearchForm.vue'
 import PageTable from '@/components/PageTable.vue'
 import EditDialog from '@/components/EditDialog.vue'
+import ButtonGroup from '@/components/ButtonGroup.vue'
+import Input from '@/components/Input.vue'
 import type { BookDialogForm, BookSearchForm, TableBookData } from '@/types/book'
 import type { PageParams } from '@/types/common'
 import { pageQueryBook, deleteBook, addBook, getBook, editBook } from '@/api/book'
@@ -77,7 +72,12 @@ const handleSearch = () => {
   // 构建查询参数
   const queryParams = { ...SearchFormObjUse.value, ...pageParams.value }
   pageQueryBook(queryParams).then((res) => {
-    tableData.value = res.data.data.data
+    tableData.value = res.data.data.data.map((item) => {
+      return {
+        ...item,
+        price: (item.price * 1.0) / 100
+      }
+    })
     total.value = res.data.data.total
   })
 }
@@ -208,15 +208,10 @@ const dialogRule: Record<string, Rule[]> = {
 <template>
   <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
     <a-form-item label="书名" name="bookName">
-      <a-input v-model:value="SearchFormObj.bookName" placeholder="请输入书名">
-        <template #prefix>
-          <BookOutlined class="site-form-item-icon" />
-        </template>
-      </a-input>
+      <Input v-model:value="SearchFormObj.bookName" placeholder="请输入书名" :icon="BookOutlined" />
     </a-form-item>
     <a-form-item label="作者" name="authorId">
       <a-select
-        ref="select"
         v-model:value="SearchFormObj.authorId"
         style="width: 160px"
         placeholder="请指定作者"
@@ -226,7 +221,6 @@ const dialogRule: Record<string, Rule[]> = {
     </a-form-item>
     <a-form-item label="出版社" name="publisherId">
       <a-select
-        ref="select"
         v-model:value="SearchFormObj.publisherId"
         style="width: 160px"
         placeholder="请指定出版社"
@@ -235,25 +229,17 @@ const dialogRule: Record<string, Rule[]> = {
       </a-select>
     </a-form-item>
     <a-form-item label="ISBN" name="isbn">
-      <a-input v-model:value="SearchFormObj.isbn" placeholder="请输入ISBN">
-        <template #prefix>
-          <GlobalOutlined class="site-form-item-icon" />
-        </template>
-      </a-input>
+      <Input v-model:value="SearchFormObj.isbn" placeholder="请输入ISBN" :icon="GlobalOutlined" />
     </a-form-item>
     <a-form-item label="语言" name="language">
-      <a-input v-model:value="SearchFormObj.language" placeholder="请输入语言">
-        <template #prefix>
-          <FontColorsOutlined class="site-form-item-icon" />
-        </template>
-      </a-input>
+      <Input
+        v-model:value="SearchFormObj.language"
+        placeholder="请输入语言"
+        :icon="FontColorsOutlined"
+      />
     </a-form-item>
   </SearchForm>
-  <div class="mt-2 space-x-3">
-    <a-button type="primary" @click="() => showModal('add')"> <PlusOutlined />新增 </a-button>
-    <a-button type="primary" danger> <DeleteOutlined />删除 </a-button>
-    <a-button @click="handleSearch"><SyncOutlined /> 刷新</a-button>
-  </div>
+  <ButtonGroup @add="() => showModal('add')" @refresh="handleSearch" />
 
   <PageTable
     v-model:pageParams="pageParams"
@@ -283,11 +269,10 @@ const dialogRule: Record<string, Rule[]> = {
     :handleEdit="handleEdit"
   >
     <a-form-item label="书名" name="bookName">
-      <a-input v-model:value="dialogForm.bookName" placeholder="请输入书名" />
+      <Input v-model:value="dialogForm.bookName" placeholder="请输入书名" :icon="BookOutlined" />
     </a-form-item>
     <a-form-item label="作者" name="authorId">
       <a-select
-        ref="select"
         v-model:value="dialogForm.authorId"
         style="width: 100%"
         placeholder="请指定作者"
@@ -297,7 +282,6 @@ const dialogRule: Record<string, Rule[]> = {
     </a-form-item>
     <a-form-item label="出版社" name="publisherId">
       <a-select
-        ref="select"
         v-model:value="dialogForm.publisherId"
         style="width: 100%"
         placeholder="请指定出版社"
@@ -306,10 +290,14 @@ const dialogRule: Record<string, Rule[]> = {
       </a-select>
     </a-form-item>
     <a-form-item label="ISBN" name="isbn">
-      <a-input v-model:value="dialogForm.isbn" placeholder="请输入ISBN" />
+      <Input v-model:value="dialogForm.isbn" placeholder="请输入ISBN" :icon="GlobalOutlined" />
     </a-form-item>
     <a-form-item label="语言" name="language">
-      <a-input v-model:value="dialogForm.language" placeholder="请输入语言" />
+      <Input
+        v-model:value="dialogForm.language"
+        placeholder="请输入语言"
+        :icon="FontColorsOutlined"
+      />
     </a-form-item>
     <!-- <a-form-item label="封面" name="coverUrl">
       <a-input v-model:value="dialogForm.coverUrl" />

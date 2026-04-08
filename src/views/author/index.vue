@@ -1,41 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { UserOutlined, PlusOutlined, DeleteOutlined, SyncOutlined } from '@ant-design/icons-vue'
 import type { Rule } from 'ant-design-vue/es/form'
-import SearchForm from '@/components/SearchForm.vue'
 import PageTable from '@/components/PageTable.vue'
 import EditDialog from '@/components/EditDialog.vue'
-import type { AuthorDialogForm, AuthorSearchForm, TableAuthorData } from '@/types/author'
-import type { PageParams } from '@/types/common'
-import { pageQueryAuthor, deleteAuthor, addAuthor, getAuthor, editAuthor } from '@/api/author'
+import type { AuthorDialogForm } from '@/types/author'
+import { deleteAuthor, addAuthor, getAuthor, editAuthor } from '@/api/author'
 import { message } from 'ant-design-vue'
-// 搜索表单
-const SearchFormObj = ref<AuthorSearchForm>({
-  authorName: ''
-})
-// 正在使用的搜索表单
-const SearchFormObjUse = ref<AuthorSearchForm>({
-  authorName: ''
-})
+import ButtonGroup from '@/components/ButtonGroup.vue'
+import Input from '@/components/Input.vue'
+import AuthorSearch from './search.vue'
+import { useAuthorStore } from '@/stores/modules/author'
+import { storeToRefs } from 'pinia'
 
-const handleReset = () => {
-  SearchFormObj.value = {
-    authorName: ''
-  }
-
-  handleSearch()
-}
-
-const handleSearch = () => {
-  // 复制一份搜索表单
-  SearchFormObjUse.value = { ...SearchFormObj.value }
-  // 构建查询参数
-  const queryParams = { ...SearchFormObjUse.value, ...pageParams.value }
-  pageQueryAuthor(queryParams).then((res) => {
-    tableData.value = res.data.data.data
-    total.value = res.data.data.total
-  })
-}
+const authorStore = useAuthorStore()
+const { handleSearch } = authorStore
 
 // 表格
 onMounted(() => {
@@ -54,6 +32,8 @@ const columns = [
   }
 ]
 
+const { tableData } = storeToRefs(authorStore)
+
 const handleDelete = (id: number) => {
   deleteAuthor(id).then(() => {
     message.success('删除成功')
@@ -63,14 +43,7 @@ const handleDelete = (id: number) => {
   })
 }
 
-const tableData = ref<TableAuthorData[]>([])
-
-// 分页
-const total = ref(0)
-const pageParams = ref<PageParams>({
-  page: 1,
-  pageSize: 10
-})
+const { total, pageParams } = storeToRefs(authorStore)
 
 // 对话框
 const mode = ref<string>('add')
@@ -110,20 +83,9 @@ const dialogRule: Record<string, Rule[]> = {
 }
 </script>
 <template>
-  <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
-    <a-form-item label="作者名" name="authorName">
-      <a-input v-model:value="SearchFormObj.authorName" placeholder="请输入作者名">
-        <template #prefix>
-          <UserOutlined class="site-form-item-icon" />
-        </template>
-      </a-input>
-    </a-form-item>
-  </SearchForm>
-  <div class="mt-2 space-x-3">
-    <a-button type="primary" @click="() => showModal('add')"> <PlusOutlined />新增 </a-button>
-    <a-button type="primary" danger> <DeleteOutlined />删除 </a-button>
-    <a-button @click="handleSearch"><SyncOutlined /> 刷新</a-button>
-  </div>
+  <AuthorSearch />
+
+  <ButtonGroup @add="() => showModal('add')" @refresh="handleSearch" />
 
   <PageTable
     v-model:pageParams="pageParams"
@@ -153,7 +115,7 @@ const dialogRule: Record<string, Rule[]> = {
     :handleEdit="handleEdit"
   >
     <a-form-item label="作者名" name="authorName">
-      <a-input v-model:value="dialogForm.authorName" />
+      <Input v-model:value="dialogForm.authorName" placeholder="请输入作者名" />
     </a-form-item>
   </EditDialog>
 </template>
