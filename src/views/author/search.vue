@@ -10,14 +10,14 @@ defineOptions({
 
 const authorStore = useAuthorStore()
 const { SearchFormObj } = storeToRefs(authorStore)
-const { handleSearch } = authorStore
+const { pageQuery, handleSearch } = authorStore
 
 const handleReset = () => {
   SearchFormObj.value = {
     authorName: ''
   }
 
-  handleSearch()
+  pageQuery()
 }
 </script>
 <template>

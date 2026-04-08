@@ -13,11 +13,11 @@ import { useAuthorStore } from '@/stores/modules/author'
 import { storeToRefs } from 'pinia'
 
 const authorStore = useAuthorStore()
-const { handleSearch } = authorStore
+const { pageQuery } = authorStore
 
 // 表格
 onMounted(() => {
-  handleSearch()
+  pageQuery()
 })
 
 const columns = [
@@ -39,7 +39,7 @@ const handleDelete = (id: number) => {
     message.success('删除成功')
     // 回到首页
     pageParams.value.page = 1
-    handleSearch()
+    pageQuery()
   })
 }
 
@@ -62,14 +62,14 @@ const showModal = (openMode: string, id?: number) => {
 const handleAdd = () => {
   addAuthor(dialogForm.value).then(() => {
     message.success('添加成功')
-    handleSearch()
+    pageQuery()
   })
 }
 
 const handleEdit = () => {
   editAuthor(dialogForm.value).then(() => {
     message.success('编辑成功')
-    handleSearch()
+    pageQuery()
   })
 }
 
@@ -85,14 +85,14 @@ const dialogRule: Record<string, Rule[]> = {
 <template>
   <AuthorSearch />
 
-  <ButtonGroup @add="() => showModal('add')" @refresh="handleSearch" />
+  <ButtonGroup @add="() => showModal('add')" @refresh="pageQuery" />
 
   <PageTable
     v-model:pageParams="pageParams"
     :total="total"
     :columns="columns"
     :tableData="tableData"
-    @pageQuery="handleSearch"
+    @pageQuery="pageQuery"
   >
     <template #tableBodyCell="{ column, record }">
       <template v-if="column.key === 'action'">

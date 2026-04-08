@@ -13,7 +13,13 @@ export const useAuthorStore = defineStore('author', () => {
   const SearchFormObjUse = ref<AuthorSearchForm>({
     authorName: ''
   })
+
   const handleSearch = () => {
+    pageParams.value.page = 1
+    pageQuery()
+  }
+
+  const pageQuery = () => {
     // 复制一份搜索表单
     SearchFormObjUse.value = { ...SearchFormObj.value }
     // 构建查询参数
@@ -36,6 +42,7 @@ export const useAuthorStore = defineStore('author', () => {
   return {
     SearchFormObj,
     handleSearch,
+    pageQuery,
     tableData,
     total,
     pageParams

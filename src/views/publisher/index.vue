@@ -35,10 +35,15 @@ const handleReset = () => {
     publisherName: ''
   }
 
-  handleSearch()
+  pageQuery()
 }
 
 const handleSearch = () => {
+  pageParams.value.page = 1
+  pageQuery()
+}
+
+const pageQuery = () => {
   // 复制一份搜索表单
   SearchFormObjUse.value = { ...SearchFormObj.value }
   // 构建查询参数
@@ -51,7 +56,7 @@ const handleSearch = () => {
 
 // 表格
 onMounted(() => {
-  handleSearch()
+  pageQuery()
 })
 
 const columns = [
@@ -71,7 +76,7 @@ const handleDelete = (id: number) => {
     message.success('删除成功')
     // 回到首页
     pageParams.value.page = 1
-    handleSearch()
+    pageQuery()
   })
 }
 
@@ -101,14 +106,14 @@ const showModal = (openMode: string, id?: number) => {
 const handleAdd = () => {
   addPublisher(dialogForm.value).then(() => {
     message.success('添加成功')
-    handleSearch()
+    pageQuery()
   })
 }
 
 const handleEdit = () => {
   editPublisher(dialogForm.value).then(() => {
     message.success('编辑成功')
-    handleSearch()
+    pageQuery()
   })
 }
 
@@ -132,14 +137,14 @@ const dialogRule: Record<string, Rule[]> = {
     </a-form-item>
   </SearchForm>
 
-  <ButtonGroup @add="() => showModal('add')" @refresh="handleSearch" />
+  <ButtonGroup @add="() => showModal('add')" @refresh="pageQuery" />
 
   <PageTable
     v-model:pageParams="pageParams"
     :total="total"
     :columns="columns"
     :tableData="tableData"
-    @pageQuery="handleSearch"
+    @pageQuery="pageQuery"
   >
     <template #tableBodyCell="{ column, record }">
       <template v-if="column.key === 'action'">
