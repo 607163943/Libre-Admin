@@ -8,6 +8,7 @@ import Publisher from '@/views/publisher/index.vue'
 import Lend from '@/views/lend/index.vue'
 import Role from '@/views/role/index.vue'
 import UserRole from '@/views/user-role/index.vue'
+import Login from '@/views/login/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -58,6 +59,11 @@ const router = createRouter({
           component: Lend
         }
       ]
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login
     }
   ]
 })

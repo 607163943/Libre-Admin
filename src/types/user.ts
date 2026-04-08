@@ -15,3 +15,10 @@ export interface TableUserData {
   username: string
   name: string
 }
+
+export interface UserInfo {
+  id: number
+  username: string
+  name: string
+  token: string
+}
