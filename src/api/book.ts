@@ -12,6 +12,11 @@ export const getBook = (id: number) => {
   return request.get<Result<BookDialogForm>>(`/book/${id}`)
 }
 
+// 获取所有图书
+export const getAllBook = () => {
+  return request.get<Result<BookDialogForm[]>>('/book/all')
+}
+
 // 添加图书
 export const addBook = (data: BookDialogForm) => {
   return request.post<Result<void>>('/book', data)

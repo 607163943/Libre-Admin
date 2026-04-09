@@ -17,8 +17,7 @@ export interface TableUserData {
 }
 
 export interface UserInfo {
-  id: number
-  username: string
   name: string
-  token: string
+  tokenName: string
+  tokenValue: string
 }

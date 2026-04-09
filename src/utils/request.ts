@@ -1,5 +1,7 @@
 import axios from 'axios'
 import { message } from 'ant-design-vue'
+import { useUserStore } from '@/stores/modules/user'
+import router from '@/router'
 
 const instance = axios.create({
   baseURL: '/api',
@@ -10,6 +12,13 @@ const instance = axios.create({
 instance.interceptors.request.use(
   function (config) {
     // 在发送请求之前做些什么
+    // 添加token令牌
+    const userStore = useUserStore()
+    const tokenName = userStore.userInfo?.tokenName
+    const tokenValue = userStore.userInfo?.tokenValue
+    if (tokenName && tokenValue) {
+      config.headers[tokenName] = tokenValue
+    }
     return config
   },
   function (error) {
@@ -30,6 +39,14 @@ instance.interceptors.response.use(
     // 对响应错误做点什么
     const res = error.response
     if (res.data?.msg) {
+      // 匿名访客访问需要认证页面则跳转到登录
+      if (res.status === 401) {
+        // 清除token
+        const userStore = useUserStore()
+        userStore.setUserInfo(null)
+        // 跳转到登录页面
+        router.push({ name: 'Login' })
+      }
       message.error(res.data.msg)
     } else {
       message.error('系统错误，请联系管理员！')
