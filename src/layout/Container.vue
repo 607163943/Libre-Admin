@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { MenuUnfoldOutlined, MenuFoldOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons-vue'
+import {
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  UserOutlined,
+  LogoutOutlined
+} from '@ant-design/icons-vue'
 import { useLayoutStore } from '@/stores/modules/layout'
 import { useUserStore } from '@/stores/modules/user'
 import { storeToRefs } from 'pinia'
@@ -68,7 +73,6 @@ function onMenuClick({ key }: { key: string }) {
     handleLogout()
   }
 }
-
 </script>
 
 <template>
@@ -97,27 +101,38 @@ function onMenuClick({ key }: { key: string }) {
     </a-drawer>
 
     <a-layout class="min-h-dvh">
-      <a-layout-header class="flex items-center justify-between !px-0" style="background: #fff;">
+      <a-layout-header class="flex items-center justify-between !px-0" style="background: #fff">
         <!-- 左侧：折叠/展开图标 -->
         <div>
-          <menu-unfold-outlined v-if="isMobile || collapsed" class="trigger" @click="handleToggle" />
+          <menu-unfold-outlined
+            v-if="isMobile || collapsed"
+            class="trigger"
+            @click="handleToggle"
+          />
           <menu-fold-outlined v-else class="trigger" @click="handleToggle" />
         </div>
 
         <!-- 右侧：用户头像 + 用户名下拉菜单 -->
         <div class="flex items-center pr-6">
           <a-dropdown trigger="hover" placement="bottomRight">
-            <div class="flex items-center gap-2 cursor-pointer select-none hover:bg-gray-100 rounded-lg px-3 py-1.5 transition-colors duration-200">
+            <div
+              class="flex items-center gap-2 cursor-pointer select-none hover:bg-gray-100 rounded-lg px-3 py-1.5 transition-colors duration-200"
+            >
               <a-avatar :size="34" class="!bg-blue-500 flex-shrink-0">
                 <template #icon>
                   <user-outlined />
                 </template>
               </a-avatar>
-              <span class="text-gray-700 font-medium text-sm hidden sm:inline-block">{{ displayName }}</span>
+              <span class="text-gray-700 font-medium text-sm hidden sm:inline-block">{{
+                displayName
+              }}</span>
             </div>
             <template #overlay>
               <a-menu @click="onMenuClick">
-                <a-menu-item key="logout" class="flex items-center gap-2 !text-red-500 hover:!bg-red-50">
+                <a-menu-item
+                  key="logout"
+                  class="flex items-center gap-2 !text-red-500 hover:!bg-red-50"
+                >
                   <logout-outlined />
                   <span>退出登录</span>
                 </a-menu-item>
@@ -153,4 +168,3 @@ function onMenuClick({ key }: { key: string }) {
   color: #1890ff;
 }
 </style>
-
