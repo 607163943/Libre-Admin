@@ -38,7 +38,7 @@ instance.interceptors.response.use(
     // 超出 2xx 范围的状态码都会触发该函数。
     // 对响应错误做点什么
     const res = error.response
-    if (res.data?.msg) {
+    if (res?.data?.msg) {
       // 匿名访客访问需要认证页面则跳转到登录
       if (res.status === 401) {
         // 清除token

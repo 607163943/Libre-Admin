@@ -2,7 +2,9 @@
 import { toRefs } from 'vue'
 import { useLayoutStore } from '@/stores/modules/layout'
 import { storeToRefs } from 'pinia'
-import type { PageParams } from '@/types/common'
+import type { PageParams, Key } from '@/types/common'
+
+// 全局
 const props = defineProps<{
   columns: {
     title: string
@@ -12,14 +14,23 @@ const props = defineProps<{
   tableData: T[]
   total: number
 }>()
+const emit = defineEmits(['selectChange', 'update:pageParams', 'pageQuery'])
 
 // 表格
 const layoutStore = useLayoutStore()
 const { isMobile } = storeToRefs(layoutStore)
 const { columns, tableData } = toRefs(props)
 
+const selectedRowKeys = defineModel<Key[]>('selectedRowKeys', {
+  required: true
+})
+
+const onSelectChange = (newSelectedRowKeys: Key[]) => {
+  console.log(newSelectedRowKeys)
+  emit('selectChange', newSelectedRowKeys)
+}
+
 // 分页
-const emit = defineEmits(['update:pageParams', 'pageQuery'])
 const { total } = toRefs(props)
 
 // 双向绑定pageParams值
@@ -37,6 +48,8 @@ const pageParams = defineModel<PageParams>('pageParams', {
       <!-- 该表格通过卸载、重新渲染来解决PC端和移动端重复切换时，表格滚动条渲染后固定存在的问题 -->
       <!-- 每次切换都是重新渲染，性能优化时注意这个组件 -->
       <a-table
+        :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+        :row-key="(record: { id: number }) => record.id"
         :columns="columns"
         :data-source="tableData"
         :pagination="false"

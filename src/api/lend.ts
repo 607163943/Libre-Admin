@@ -31,3 +31,8 @@ export const editLend = (data: LendDialogForm) => {
 export const deleteLend = (id: number) => {
   return request.delete<Result<void>>(`/lend/${id}`)
 }
+
+// 批量删除借阅
+export const deleteBatchLend = (ids: string) => {
+  return request.delete<Result<void>>(`/lend`, { params: { ids: ids } })
+}

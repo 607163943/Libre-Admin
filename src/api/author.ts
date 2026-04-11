@@ -31,3 +31,8 @@ export const editAuthor = (data: AuthorDialogForm) => {
 export const deleteAuthor = (id: number) => {
   return request.delete<Result<void>>(`/author/${id}`)
 }
+
+// 批量删除作者
+export const deleteBatchAuthor = (ids: string) => {
+  return request.delete<Result<void>>(`/author`, { params: { ids: ids } })
+}

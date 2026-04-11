@@ -31,3 +31,8 @@ export const editUser = (data: UserDialogForm) => {
 export const deleteUser = (id: number) => {
   return request.delete<Result<void>>(`/user/${id}`)
 }
+
+// 批量删除用户
+export const deleteBatchUser = (ids: string) => {
+  return request.delete<Result<void>>(`/user`, { params: { ids: ids } })
+}

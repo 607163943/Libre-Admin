@@ -35,3 +35,8 @@ export const editPublisher = (data: PublisherDialogForm) => {
 export const deletePublisher = (id: number) => {
   return request.delete<Result<void>>(`/publisher/${id}`)
 }
+
+// 批量删除出版社
+export const deleteBatchPublisher = (ids: string) => {
+  return request.delete<Result<void>>(`/publisher`, { params: { ids: ids } })
+}

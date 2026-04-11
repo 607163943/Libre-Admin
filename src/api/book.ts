@@ -31,3 +31,8 @@ export const editBook = (data: BookDialogForm) => {
 export const deleteBook = (id: number) => {
   return request.delete<Result<void>>(`/book/${id}`)
 }
+
+// 批量删除图书
+export const deleteBatchBook = (ids: string) => {
+  return request.delete<Result<void>>(`/book`, { params: { ids: ids } })
+}

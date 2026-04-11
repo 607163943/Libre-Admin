@@ -9,7 +9,8 @@ import ButtonGroup from '@/components/ButtonGroup.vue'
 import Input from '@/components/Input.vue'
 import type { UserDialogForm, UserSearchForm, TableUserData } from '@/types/user'
 import type { PageParams } from '@/types/common'
-import { pageQueryUser, deleteUser, getUser, editUser, addUser } from '@/api/user'
+import type { Key } from '@/types/common'
+import { pageQueryUser, deleteUser, getUser, editUser, addUser, deleteBatchUser } from '@/api/user'
 import { message } from 'ant-design-vue'
 // 搜索表单
 const SearchFormObj = ref<UserSearchForm>({
@@ -69,8 +70,23 @@ const columns = [
   }
 ]
 
+const selectedRowKeys = ref<Key[]>([])
+
+const onSelectChange = (newSelectedRowKeys: Key[]) => {
+  selectedRowKeys.value = newSelectedRowKeys
+}
+
 const handleDelete = (id: number) => {
   deleteUser(id).then(() => {
+    message.success('删除成功')
+    // 回到首页
+    pageParams.value.page = 1
+    pageQuery()
+  })
+}
+
+const handleBatchDelete = () => {
+  deleteBatchUser(selectedRowKeys.value.join(',')).then(() => {
     message.success('删除成功')
     // 回到首页
     pageParams.value.page = 1
@@ -141,14 +157,21 @@ const dialogRule: Record<string, Rule[]> = {
     </a-form-item>
   </SearchForm>
 
-  <ButtonGroup @add="() => showModal('add')" @refresh="pageQuery" />
+  <ButtonGroup
+    :deleteItemCount="selectedRowKeys.length"
+    @add="() => showModal('add')"
+    @delete="handleBatchDelete"
+    @refresh="pageQuery"
+  />
 
   <PageTable
     v-model:pageParams="pageParams"
+    v-model:selectedRowKeys="selectedRowKeys"
     :total="total"
     :columns="columns"
     :tableData="tableData"
     @pageQuery="pageQuery"
+    @selectChange="onSelectChange"
   >
     <template #tableBodyCell="{ column, record }">
       <template v-if="column.key === 'action'">

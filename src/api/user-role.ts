@@ -31,3 +31,8 @@ export const editUserRole = (data: UserRoleDialogForm) => {
 export const deleteUserRole = (id: number) => {
   return request.delete<Result<void>>(`/user-role/${id}`)
 }
+
+// 批量删除用户角色
+export const deleteBatchUserRole = (ids: string) => {
+  return request.delete<Result<void>>(`/user-role`, { params: { ids: ids } })
+}

@@ -11,6 +11,8 @@ export interface PageResult<T> {
   data: T
 }
 
+export type Key = number
+
 export interface PageParams {
   page: number
   pageSize: number

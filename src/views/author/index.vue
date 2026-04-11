@@ -4,13 +4,14 @@ import type { Rule } from 'ant-design-vue/es/form'
 import PageTable from '@/components/PageTable.vue'
 import EditDialog from '@/components/EditDialog.vue'
 import type { AuthorDialogForm } from '@/types/author'
-import { deleteAuthor, addAuthor, getAuthor, editAuthor } from '@/api/author'
+import { deleteAuthor, addAuthor, getAuthor, editAuthor, deleteBatchAuthor } from '@/api/author'
 import { message } from 'ant-design-vue'
 import ButtonGroup from '@/components/ButtonGroup.vue'
 import Input from '@/components/Input.vue'
 import AuthorSearch from './search.vue'
 import { useAuthorStore } from '@/stores/modules/author'
 import { storeToRefs } from 'pinia'
+import type { Key } from '@/types/common'
 
 const authorStore = useAuthorStore()
 const { pageQuery } = authorStore
@@ -34,8 +35,23 @@ const columns = [
 
 const { tableData } = storeToRefs(authorStore)
 
+const selectedRowKeys = ref<Key[]>([])
+
+const onSelectChange = (newSelectedRowKeys: Key[]) => {
+  selectedRowKeys.value = newSelectedRowKeys
+}
+
 const handleDelete = (id: number) => {
   deleteAuthor(id).then(() => {
+    message.success('删除成功')
+    // 回到首页
+    pageParams.value.page = 1
+    pageQuery()
+  })
+}
+
+const handleBatchDelete = () => {
+  deleteBatchAuthor(selectedRowKeys.value.join(',')).then(() => {
     message.success('删除成功')
     // 回到首页
     pageParams.value.page = 1
@@ -85,14 +101,21 @@ const dialogRule: Record<string, Rule[]> = {
 <template>
   <AuthorSearch />
 
-  <ButtonGroup @add="() => showModal('add')" @refresh="pageQuery" />
+  <ButtonGroup
+    :deleteItemCount="selectedRowKeys.length"
+    @add="() => showModal('add')"
+    @delete="handleBatchDelete"
+    @refresh="pageQuery"
+  />
 
   <PageTable
     v-model:pageParams="pageParams"
+    v-model:selectedRowKeys="selectedRowKeys"
     :total="total"
     :columns="columns"
     :tableData="tableData"
     @pageQuery="pageQuery"
+    @selectChange="onSelectChange"
   >
     <template #tableBodyCell="{ column, record }">
       <template v-if="column.key === 'action'">

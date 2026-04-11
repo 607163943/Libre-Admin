@@ -8,8 +8,8 @@ import EditDialog from '@/components/EditDialog.vue'
 import ButtonGroup from '@/components/ButtonGroup.vue'
 import Input from '@/components/Input.vue'
 import type { BookDialogForm, BookSearchForm, TableBookData } from '@/types/book'
-import type { PageParams } from '@/types/common'
-import { pageQueryBook, deleteBook, addBook, getBook, editBook } from '@/api/book'
+import type { PageParams, Key } from '@/types/common'
+import { pageQueryBook, deleteBook, addBook, getBook, editBook, deleteBatchBook } from '@/api/book'
 import { message } from 'ant-design-vue'
 import { getAllAuthor } from '@/api/author'
 import { getAllPublisher } from '@/api/publisher'
@@ -139,8 +139,23 @@ const columns = [
   }
 ]
 
+const selectedRowKeys = ref<Key[]>([])
+
+const onSelectChange = (newSelectedRowKeys: Key[]) => {
+  selectedRowKeys.value = newSelectedRowKeys
+}
+
 const handleDelete = (id: number) => {
   deleteBook(id).then(() => {
+    message.success('删除成功')
+    // 回到首页
+    pageParams.value.page = 1
+    pageQuery()
+  })
+}
+
+const handleBatchDelete = () => {
+  deleteBatchBook(selectedRowKeys.value.join(',')).then(() => {
     message.success('删除成功')
     // 回到首页
     pageParams.value.page = 1
@@ -244,14 +259,21 @@ const dialogRule: Record<string, Rule[]> = {
       />
     </a-form-item>
   </SearchForm>
-  <ButtonGroup @add="() => showModal('add')" @refresh="pageQuery" />
+  <ButtonGroup
+    :deleteItemCount="selectedRowKeys.length"
+    @add="() => showModal('add')"
+    @delete="handleBatchDelete"
+    @refresh="pageQuery"
+  />
 
   <PageTable
     v-model:pageParams="pageParams"
+    v-model:selectedRowKeys="selectedRowKeys"
     :total="total"
     :columns="columns"
     :tableData="tableData"
     @pageQuery="pageQuery"
+    @selectChange="onSelectChange"
   >
     <template #tableBodyCell="{ column, record }">
       <template v-if="column.key === 'action'">

@@ -6,6 +6,7 @@ import PageTable from '@/components/PageTable.vue'
 import EditDialog from '@/components/EditDialog.vue'
 import ButtonGroup from '@/components/ButtonGroup.vue'
 import type { UserRoleDialogForm, UserRoleSearchForm, TableUserRoleData } from '@/types/user-role'
+import type { Key } from '@/types/common'
 import type { PageParams } from '@/types/common'
 import { message, type SelectProps } from 'ant-design-vue'
 import { getAllRole } from '@/api/role'
@@ -15,7 +16,8 @@ import {
   getUserRole,
   addUserRole,
   editUserRole,
-  deleteUserRole
+  deleteUserRole,
+  deleteBatchUserRole
 } from '@/api/user-role'
 // 全局参数
 const userOptions = ref<SelectProps['options']>([])
@@ -95,8 +97,23 @@ const columns = [
   }
 ]
 
+const selectedRowKeys = ref<Key[]>([])
+
+const onSelectChange = (newSelectedRowKeys: Key[]) => {
+  selectedRowKeys.value = newSelectedRowKeys
+}
+
 const handleDelete = (id: number) => {
   deleteUserRole(id).then(() => {
+    message.success('删除成功')
+    // 回到首页
+    pageParams.value.page = 1
+    pageQuery()
+  })
+}
+
+const handleBatchDelete = () => {
+  deleteBatchUserRole(selectedRowKeys.value.join(',')).then(() => {
     message.success('删除成功')
     // 回到首页
     pageParams.value.page = 1
@@ -165,14 +182,21 @@ const dialogRule: Record<string, Rule[]> = {
     </a-form-item>
   </SearchForm>
 
-  <ButtonGroup @add="() => showModal('add')" @refresh="pageQuery" />
+  <ButtonGroup
+    :deleteItemCount="selectedRowKeys.length"
+    @add="() => showModal('add')"
+    @delete="handleBatchDelete"
+    @refresh="pageQuery"
+  />
 
   <PageTable
     v-model:pageParams="pageParams"
+    v-model:selectedRowKeys="selectedRowKeys"
     :total="total"
     :columns="columns"
     :tableData="tableData"
     @pageQuery="pageQuery"
+    @selectChange="onSelectChange"
   >
     <template #tableBodyCell="{ column, record }">
       <template v-if="column.key === 'action'">
