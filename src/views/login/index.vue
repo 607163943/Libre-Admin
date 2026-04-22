@@ -8,6 +8,7 @@ import { useUserStore } from '@/stores/modules/user'
 import { useRouter } from 'vue-router'
 import type { Rule } from 'ant-design-vue/es/form'
 import loginBg from '@/assets/login-bg-left.svg'
+import { generateMD5 } from '@/utils/security-utils'
 
 // ─── 表单状态 ───────────────────────────────────────────────
 const form = ref<LoginForm>({
@@ -45,7 +46,8 @@ const handleLogin = async () => {
     return
   }
   loading.value = true
-  login(form.value)
+  const tempForm: LoginForm = { ...form.value, password: generateMD5(form.value.password) }
+  login(tempForm)
     .then((res) => {
       // 令牌存储
       userStore.setUserInfo(res.data.data)
