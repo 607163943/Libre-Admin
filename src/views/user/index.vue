@@ -12,6 +12,8 @@ import type { PageParams } from '@/types/common'
 import type { Key } from '@/types/common'
 import { pageQueryUser, deleteUser, getUser, editUser, addUser, deleteBatchUser } from '@/api/user'
 import { message } from 'ant-design-vue'
+import { generateMD5 } from '@/utils/security-utils'
+
 // 搜索表单
 const SearchFormObj = ref<UserSearchForm>({
   username: '',
@@ -118,14 +120,22 @@ const showModal = (openMode: string, id?: number) => {
 }
 
 const handleAdd = () => {
-  addUser(dialogForm.value).then(() => {
+  const tempForm: UserDialogForm = {
+    ...dialogForm.value,
+    password: generateMD5(dialogForm.value.password)
+  }
+  addUser(tempForm).then(() => {
     message.success('添加成功')
     pageQuery()
   })
 }
 
 const handleEdit = () => {
-  editUser(dialogForm.value).then(() => {
+  const tempForm: UserDialogForm = {
+    ...dialogForm.value,
+    password: generateMD5(dialogForm.value.password)
+  }
+  editUser(tempForm).then(() => {
     message.success('编辑成功')
     pageQuery()
   })
@@ -140,7 +150,7 @@ const dialogForm = ref<UserDialogForm>({
 
 const dialogRule: Record<string, Rule[]> = {
   username: [{ required: true, message: '请输入用户名!' }],
-  name: [{ required: true, message: '请输入姓名!' }]
+  password: [{ required: true, message: '请输入密码!' }]
 }
 </script>
 <template>
