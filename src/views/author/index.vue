@@ -99,47 +99,49 @@ const dialogRule: Record<string, Rule[]> = {
 }
 </script>
 <template>
-  <AuthorSearch />
+  <div>
+    <AuthorSearch />
 
-  <ButtonGroup
-    :deleteItemCount="selectedRowKeys.length"
-    @add="() => showModal('add')"
-    @delete="handleBatchDelete"
-    @refresh="pageQuery"
-  />
+    <ButtonGroup
+      :deleteItemCount="selectedRowKeys.length"
+      @add="() => showModal('add')"
+      @delete="handleBatchDelete"
+      @refresh="pageQuery"
+    />
 
-  <PageTable
-    v-model:pageParams="pageParams"
-    v-model:selectedRowKeys="selectedRowKeys"
-    :total="total"
-    :columns="columns"
-    :tableData="tableData"
-    @pageQuery="pageQuery"
-    @selectChange="onSelectChange"
-  >
-    <template #tableBodyCell="{ column, record }">
-      <template v-if="column.key === 'action'">
-        <span>
-          <a-button type="link" @click="() => showModal('edit', record.id)">编辑</a-button>
-          <a-button type="link" danger @click="() => handleDelete(record.id)">删除</a-button>
-        </span>
+    <PageTable
+      v-model:pageParams="pageParams"
+      v-model:selectedRowKeys="selectedRowKeys"
+      :total="total"
+      :columns="columns"
+      :tableData="tableData"
+      @pageQuery="pageQuery"
+      @selectChange="onSelectChange"
+    >
+      <template #tableBodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <span>
+            <a-button type="link" @click="() => showModal('edit', record.id)">编辑</a-button>
+            <a-button type="link" danger @click="() => handleDelete(record.id)">删除</a-button>
+          </span>
+        </template>
       </template>
-    </template>
-  </PageTable>
+    </PageTable>
 
-  <EditDialog
-    v-model:open="open"
-    addTitle="新增作者"
-    editTitle="编辑作者"
-    :mode="mode"
-    :dialogForm="dialogForm"
-    :dialogRule="dialogRule"
-    :handleAdd="handleAdd"
-    :handleEdit="handleEdit"
-  >
-    <a-form-item label="作者名" name="authorName">
-      <Input v-model:value="dialogForm.authorName" placeholder="请输入作者名" />
-    </a-form-item>
-  </EditDialog>
+    <EditDialog
+      v-model:open="open"
+      addTitle="新增作者"
+      editTitle="编辑作者"
+      :mode="mode"
+      :dialogForm="dialogForm"
+      :dialogRule="dialogRule"
+      :handleAdd="handleAdd"
+      :handleEdit="handleEdit"
+    >
+      <a-form-item label="作者名" name="authorName">
+        <Input v-model:value="dialogForm.authorName" placeholder="请输入作者名" />
+      </a-form-item>
+    </EditDialog>
+  </div>
 </template>
 <style></style>

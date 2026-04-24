@@ -7,34 +7,29 @@ import PageTable from '@/components/PageTable.vue'
 import EditDialog from '@/components/EditDialog.vue'
 import ButtonGroup from '@/components/ButtonGroup.vue'
 import Input from '@/components/Input.vue'
-import type {
-  PublisherDialogForm,
-  PublisherSearchForm,
-  TablePublisherData
-} from '@/types/publisher'
-import type { PageParams } from '@/types/common'
-import type { Key } from '@/types/common'
+import type { PermissionForm, TablePermissionData, PermissionDialogForm } from '@/types/permission'
+import type { PageParams, Key } from '@/types/common'
 import {
-  pageQueryPublisher,
-  deletePublisher,
-  addPublisher,
-  getPublisher,
-  editPublisher,
-  deleteBatchPublisher
-} from '@/api/publisher'
+  pageQueryPermission,
+  deletePermission,
+  addPermission,
+  getPermission,
+  editPermission,
+  deleteBatchPermission
+} from '@/api/permission'
 import { message } from 'ant-design-vue'
 // 搜索表单
-const SearchFormObj = ref<PublisherSearchForm>({
-  publisherName: ''
+const SearchFormObj = ref<PermissionForm>({
+  permissionCode: ''
 })
 // 正在使用的搜索表单
-const SearchFormObjUse = ref<PublisherSearchForm>({
-  publisherName: ''
+const SearchFormObjUse = ref<PermissionForm>({
+  permissionCode: ''
 })
 
 const handleReset = () => {
   SearchFormObj.value = {
-    publisherName: ''
+    permissionCode: ''
   }
 
   pageQuery()
@@ -50,7 +45,7 @@ const pageQuery = () => {
   SearchFormObjUse.value = { ...SearchFormObj.value }
   // 构建查询参数
   const queryParams = { ...SearchFormObjUse.value, ...pageParams.value }
-  pageQueryPublisher(queryParams).then((res) => {
+  pageQueryPermission(queryParams).then((res) => {
     tableData.value = res.data.data.data
     total.value = res.data.data.total
   })
@@ -63,9 +58,14 @@ onMounted(() => {
 
 const columns = [
   {
-    title: '出版社名',
-    dataIndex: 'publisherName',
-    key: 'publisherName'
+    title: '权限编码',
+    dataIndex: 'permissionCode',
+    key: 'permissionCode'
+  },
+  {
+    title: '权限描述',
+    dataIndex: 'permissionDesc',
+    key: 'permissionDesc'
   },
   {
     title: 'Action',
@@ -80,7 +80,7 @@ const onSelectChange = (newSelectedRowKeys: Key[]) => {
 }
 
 const handleDelete = (id: number) => {
-  deletePublisher(id).then(() => {
+  deletePermission(id).then(() => {
     message.success('删除成功')
     // 回到首页
     pageParams.value.page = 1
@@ -89,7 +89,7 @@ const handleDelete = (id: number) => {
 }
 
 const handleBatchDelete = () => {
-  deleteBatchPublisher(selectedRowKeys.value.join(',')).then(() => {
+  deleteBatchPermission(selectedRowKeys.value.join(',')).then(() => {
     message.success('删除成功')
     // 回到首页
     pageParams.value.page = 1
@@ -97,7 +97,7 @@ const handleBatchDelete = () => {
   })
 }
 
-const tableData = ref<TablePublisherData[]>([])
+const tableData = ref<TablePermissionData[]>([])
 
 // 分页
 const total = ref(0)
@@ -113,7 +113,7 @@ const open = ref<boolean>(false)
 const showModal = (openMode: string, id?: number) => {
   mode.value = openMode
   if (mode.value === 'edit' && id) {
-    getPublisher(id).then((res) => {
+    getPermission(id).then((res) => {
       dialogForm.value = res.data.data
     })
   }
@@ -121,35 +121,37 @@ const showModal = (openMode: string, id?: number) => {
 }
 
 const handleAdd = () => {
-  addPublisher(dialogForm.value).then(() => {
+  addPermission(dialogForm.value).then(() => {
     message.success('添加成功')
     pageQuery()
   })
 }
 
 const handleEdit = () => {
-  editPublisher(dialogForm.value).then(() => {
+  editPermission(dialogForm.value).then(() => {
     message.success('编辑成功')
     pageQuery()
   })
 }
 
-const dialogForm = ref<PublisherDialogForm>({
+const dialogForm = ref<PermissionDialogForm>({
   id: '',
-  publisherName: ''
+  permissionCode: '',
+  permissionDesc: ''
 })
 
 const dialogRule: Record<string, Rule[]> = {
-  publisherName: [{ required: true, message: '请输入出版社名!' }]
+  permissionCode: [{ required: true, message: '请输入权限编码!' }],
+  permissionDesc: [{ required: true, message: '请输入权限描述!' }]
 }
 </script>
 <template>
   <div>
     <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
-      <a-form-item label="出版社名" name="publisherName">
+      <a-form-item label="权限编码" name="permissionCode">
         <Input
-          v-model:value="SearchFormObj.publisherName"
-          placeholder="请输入出版社名"
+          v-model:value="SearchFormObj.permissionCode"
+          placeholder="请输入权限编码"
           :icon="BankOutlined"
         />
       </a-form-item>
@@ -183,16 +185,27 @@ const dialogRule: Record<string, Rule[]> = {
 
     <EditDialog
       v-model:open="open"
-      addTitle="新增出版社"
-      editTitle="编辑出版社"
+      addTitle="新增权限"
+      editTitle="编辑权限"
       :mode="mode"
       :dialogForm="dialogForm"
       :dialogRule="dialogRule"
       :handleAdd="handleAdd"
       :handleEdit="handleEdit"
     >
-      <a-form-item label="出版社名" name="publisherName">
-        <Input v-model:value="dialogForm.publisherName" placeholder="请输入出版社名" />
+      <a-form-item label="权限编码" name="permissionCode">
+        <Input
+          v-model:value="dialogForm.permissionCode"
+          placeholder="请输入权限编码"
+          :icon="BankOutlined"
+        />
+      </a-form-item>
+      <a-form-item label="权限描述" name="permissionDesc">
+        <Input
+          v-model:value="dialogForm.permissionDesc"
+          placeholder="请输入权限描述"
+          :icon="BankOutlined"
+        />
       </a-form-item>
     </EditDialog>
   </div>

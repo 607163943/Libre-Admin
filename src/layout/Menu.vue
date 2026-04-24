@@ -6,7 +6,9 @@ import {
   SwapOutlined,
   SafetyCertificateOutlined,
   SolutionOutlined,
-  HomeOutlined
+  HomeOutlined,
+  SecurityScanOutlined,
+  TeamOutlined
 } from '@ant-design/icons-vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -74,7 +76,7 @@ const menuItems = [
   {
     key: '/role',
     keyName: 'Role',
-    icon: SafetyCertificateOutlined,
+    icon: TeamOutlined,
     label: '角色管理'
   },
   {
@@ -82,6 +84,18 @@ const menuItems = [
     keyName: 'UserRole',
     icon: SolutionOutlined,
     label: '用户角色管理'
+  },
+  {
+    key: '/permission',
+    keyName: 'Permission',
+    icon: SafetyCertificateOutlined,
+    label: '权限管理'
+  },
+  {
+    key: '/role-permission',
+    keyName: 'RolePermission',
+    icon: SecurityScanOutlined,
+    label: '角色权限管理'
   }
 ]
 </script>

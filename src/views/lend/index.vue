@@ -210,106 +210,108 @@ const dialogRule: Record<string, Rule[]> = {
 }
 </script>
 <template>
-  <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
-    <a-form-item label="借阅者账户名" name="userId">
-      <a-select
-        v-model:value="SearchFormObj.userId"
-        style="width: 160px"
-        placeholder="请指定借阅者账户名"
-        :options="userOptions"
-      >
-      </a-select>
-    </a-form-item>
-    <a-form-item label="图书" name="bookId">
-      <a-select
-        v-model:value="SearchFormObj.bookId"
-        style="width: 160px"
-        placeholder="请指定图书"
-        :options="bookOptions"
-      >
-      </a-select>
-    </a-form-item>
-    <a-form-item label="借阅状态" name="state">
-      <a-select
-        v-model:value="SearchFormObj.state"
-        style="width: 160px"
-        placeholder="请指定借阅状态"
-        :options="stateOptions"
-      >
-      </a-select>
-    </a-form-item>
-  </SearchForm>
+  <div>
+    <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
+      <a-form-item label="借阅者账户名" name="userId">
+        <a-select
+          v-model:value="SearchFormObj.userId"
+          style="width: 160px"
+          placeholder="请指定借阅者账户名"
+          :options="userOptions"
+        >
+        </a-select>
+      </a-form-item>
+      <a-form-item label="图书" name="bookId">
+        <a-select
+          v-model:value="SearchFormObj.bookId"
+          style="width: 160px"
+          placeholder="请指定图书"
+          :options="bookOptions"
+        >
+        </a-select>
+      </a-form-item>
+      <a-form-item label="借阅状态" name="state">
+        <a-select
+          v-model:value="SearchFormObj.state"
+          style="width: 160px"
+          placeholder="请指定借阅状态"
+          :options="stateOptions"
+        >
+        </a-select>
+      </a-form-item>
+    </SearchForm>
 
-  <ButtonGroup
-    :deleteItemCount="selectedRowKeys.length"
-    @add="() => showModal('add')"
-    @delete="handleBatchDelete"
-    @refresh="pageQuery"
-  />
+    <ButtonGroup
+      :deleteItemCount="selectedRowKeys.length"
+      @add="() => showModal('add')"
+      @delete="handleBatchDelete"
+      @refresh="pageQuery"
+    />
 
-  <PageTable
-    v-model:pageParams="pageParams"
-    v-model:selectedRowKeys="selectedRowKeys"
-    :total="total"
-    :columns="columns"
-    :tableData="tableData"
-    @pageQuery="pageQuery"
-    @selectChange="onSelectChange"
-  >
-    <template #tableBodyCell="{ column, record }">
-      <template v-if="column.key === 'state'">
-        <span>
-          <a-tag color="orange" v-if="record.state === 1">未归还</a-tag>
-          <a-tag color="green" v-if="record.state === 2">已归还</a-tag>
-          <a-tag color="red" v-if="record.state === 3">已逾期</a-tag>
-        </span>
+    <PageTable
+      v-model:pageParams="pageParams"
+      v-model:selectedRowKeys="selectedRowKeys"
+      :total="total"
+      :columns="columns"
+      :tableData="tableData"
+      @pageQuery="pageQuery"
+      @selectChange="onSelectChange"
+    >
+      <template #tableBodyCell="{ column, record }">
+        <template v-if="column.key === 'state'">
+          <span>
+            <a-tag color="orange" v-if="record.state === 1">未归还</a-tag>
+            <a-tag color="green" v-if="record.state === 2">已归还</a-tag>
+            <a-tag color="red" v-if="record.state === 3">已逾期</a-tag>
+          </span>
+        </template>
+        <template v-if="column.key === 'action'">
+          <span>
+            <a-button type="link" @click="() => showModal('edit', record.id)">编辑</a-button>
+            <a-button type="link" danger @click="() => handleDelete(record.id)">删除</a-button>
+          </span>
+        </template>
       </template>
-      <template v-if="column.key === 'action'">
-        <span>
-          <a-button type="link" @click="() => showModal('edit', record.id)">编辑</a-button>
-          <a-button type="link" danger @click="() => handleDelete(record.id)">删除</a-button>
-        </span>
-      </template>
-    </template>
-  </PageTable>
+    </PageTable>
 
-  <EditDialog
-    v-model:open="open"
-    addTitle="新增借阅"
-    editTitle="编辑借阅"
-    :mode="mode"
-    :dialogForm="dialogForm"
-    :dialogRule="dialogRule"
-    :handleAdd="handleAdd"
-    :handleEdit="handleEdit"
-  >
-    <a-form-item label="借阅者id" name="userId">
-      <a-select
-        v-model:value="dialogForm.userId"
-        style="width: 100%"
-        placeholder="请指定借阅者id"
-        :options="userOptions"
-      >
-      </a-select>
-    </a-form-item>
-    <a-form-item label="图书id" name="bookId">
-      <a-select
-        v-model:value="dialogForm.bookId"
-        style="width: 100%"
-        placeholder="请指定图书id"
-        :options="bookOptions"
-      >
-      </a-select>
-    </a-form-item>
-    <a-form-item label="借阅状态" name="state">
-      <a-select
-        v-model:value="dialogForm.state"
-        style="width: 100%"
-        placeholder="请指定借阅状态"
-        :options="stateOptions"
-      >
-      </a-select>
-    </a-form-item>
-  </EditDialog>
+    <EditDialog
+      v-model:open="open"
+      addTitle="新增借阅"
+      editTitle="编辑借阅"
+      :mode="mode"
+      :dialogForm="dialogForm"
+      :dialogRule="dialogRule"
+      :handleAdd="handleAdd"
+      :handleEdit="handleEdit"
+    >
+      <a-form-item label="借阅者id" name="userId">
+        <a-select
+          v-model:value="dialogForm.userId"
+          style="width: 100%"
+          placeholder="请指定借阅者id"
+          :options="userOptions"
+        >
+        </a-select>
+      </a-form-item>
+      <a-form-item label="图书id" name="bookId">
+        <a-select
+          v-model:value="dialogForm.bookId"
+          style="width: 100%"
+          placeholder="请指定图书id"
+          :options="bookOptions"
+        >
+        </a-select>
+      </a-form-item>
+      <a-form-item label="借阅状态" name="state">
+        <a-select
+          v-model:value="dialogForm.state"
+          style="width: 100%"
+          placeholder="请指定借阅状态"
+          :options="stateOptions"
+        >
+        </a-select>
+      </a-form-item>
+    </EditDialog>
+  </div>
 </template>
 <style></style>

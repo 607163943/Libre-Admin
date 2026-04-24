@@ -226,136 +226,142 @@ const dialogRule: Record<string, Rule[]> = {
 }
 </script>
 <template>
-  <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
-    <a-form-item label="书名" name="bookName">
-      <Input v-model:value="SearchFormObj.bookName" placeholder="请输入书名" :icon="BookOutlined" />
-    </a-form-item>
-    <a-form-item label="作者" name="authorId">
-      <a-select
-        v-model:value="SearchFormObj.authorId"
-        style="width: 160px"
-        placeholder="请指定作者"
-        :options="authorOptions"
-      >
-      </a-select>
-    </a-form-item>
-    <a-form-item label="出版社" name="publisherId">
-      <a-select
-        v-model:value="SearchFormObj.publisherId"
-        style="width: 160px"
-        placeholder="请指定出版社"
-        :options="publisherOptions"
-      >
-      </a-select>
-    </a-form-item>
-    <a-form-item label="ISBN" name="isbn">
-      <Input v-model:value="SearchFormObj.isbn" placeholder="请输入ISBN" :icon="GlobalOutlined" />
-    </a-form-item>
-    <a-form-item label="语言" name="language">
-      <Input
-        v-model:value="SearchFormObj.language"
-        placeholder="请输入语言"
-        :icon="FontColorsOutlined"
-      />
-    </a-form-item>
-  </SearchForm>
-  <ButtonGroup
-    :deleteItemCount="selectedRowKeys.length"
-    @add="() => showModal('add')"
-    @delete="handleBatchDelete"
-    @refresh="pageQuery"
-  />
+  <div>
+    <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
+      <a-form-item label="书名" name="bookName">
+        <Input
+          v-model:value="SearchFormObj.bookName"
+          placeholder="请输入书名"
+          :icon="BookOutlined"
+        />
+      </a-form-item>
+      <a-form-item label="作者" name="authorId">
+        <a-select
+          v-model:value="SearchFormObj.authorId"
+          style="width: 160px"
+          placeholder="请指定作者"
+          :options="authorOptions"
+        >
+        </a-select>
+      </a-form-item>
+      <a-form-item label="出版社" name="publisherId">
+        <a-select
+          v-model:value="SearchFormObj.publisherId"
+          style="width: 160px"
+          placeholder="请指定出版社"
+          :options="publisherOptions"
+        >
+        </a-select>
+      </a-form-item>
+      <a-form-item label="ISBN" name="isbn">
+        <Input v-model:value="SearchFormObj.isbn" placeholder="请输入ISBN" :icon="GlobalOutlined" />
+      </a-form-item>
+      <a-form-item label="语言" name="language">
+        <Input
+          v-model:value="SearchFormObj.language"
+          placeholder="请输入语言"
+          :icon="FontColorsOutlined"
+        />
+      </a-form-item>
+    </SearchForm>
+    <ButtonGroup
+      :deleteItemCount="selectedRowKeys.length"
+      @add="() => showModal('add')"
+      @delete="handleBatchDelete"
+      @refresh="pageQuery"
+    />
 
-  <PageTable
-    v-model:pageParams="pageParams"
-    v-model:selectedRowKeys="selectedRowKeys"
-    :total="total"
-    :columns="columns"
-    :tableData="tableData"
-    @pageQuery="pageQuery"
-    @selectChange="onSelectChange"
-  >
-    <template #tableBodyCell="{ column, record }">
-      <template v-if="column.key === 'action'">
-        <span>
-          <a-button type="link" @click="() => showModal('edit', record.id)">编辑</a-button>
-          <a-button type="link" danger @click="() => handleDelete(record.id)">删除</a-button>
-        </span>
+    <PageTable
+      v-model:pageParams="pageParams"
+      v-model:selectedRowKeys="selectedRowKeys"
+      :total="total"
+      :columns="columns"
+      :tableData="tableData"
+      @pageQuery="pageQuery"
+      @selectChange="onSelectChange"
+    >
+      <template #tableBodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <span>
+            <a-button type="link" @click="() => showModal('edit', record.id)">编辑</a-button>
+            <a-button type="link" danger @click="() => handleDelete(record.id)">删除</a-button>
+          </span>
+        </template>
       </template>
-    </template>
-  </PageTable>
+    </PageTable>
 
-  <EditDialog
-    v-model:open="open"
-    addTitle="新增图书"
-    editTitle="编辑图书"
-    :mode="mode"
-    :dialogForm="dialogForm"
-    :dialogRule="dialogRule"
-    :handleAdd="handleAdd"
-    :handleEdit="handleEdit"
-  >
-    <a-form-item label="书名" name="bookName">
-      <Input v-model:value="dialogForm.bookName" placeholder="请输入书名" :icon="BookOutlined" />
-    </a-form-item>
-    <a-form-item label="作者" name="authorId">
-      <a-select
-        v-model:value="dialogForm.authorId"
-        style="width: 100%"
-        placeholder="请指定作者"
-        :options="authorOptions"
-      >
-      </a-select>
-    </a-form-item>
-    <a-form-item label="出版社" name="publisherId">
-      <a-select
-        v-model:value="dialogForm.publisherId"
-        style="width: 100%"
-        placeholder="请指定出版社"
-        :options="publisherOptions"
-      >
-      </a-select>
-    </a-form-item>
-    <a-form-item label="ISBN" name="isbn">
-      <Input v-model:value="dialogForm.isbn" placeholder="请输入ISBN" :icon="GlobalOutlined" />
-    </a-form-item>
-    <a-form-item label="语言" name="language">
-      <Input
-        v-model:value="dialogForm.language"
-        placeholder="请输入语言"
-        :icon="FontColorsOutlined"
-      />
-    </a-form-item>
-    <!-- <a-form-item label="封面" name="coverUrl">
+    <EditDialog
+      v-model:open="open"
+      addTitle="新增图书"
+      editTitle="编辑图书"
+      :mode="mode"
+      :dialogForm="dialogForm"
+      :dialogRule="dialogRule"
+      :handleAdd="handleAdd"
+      :handleEdit="handleEdit"
+    >
+      <a-form-item label="书名" name="bookName">
+        <Input v-model:value="dialogForm.bookName" placeholder="请输入书名" :icon="BookOutlined" />
+      </a-form-item>
+      <a-form-item label="作者" name="authorId">
+        <a-select
+          v-model:value="dialogForm.authorId"
+          style="width: 100%"
+          placeholder="请指定作者"
+          :options="authorOptions"
+        >
+        </a-select>
+      </a-form-item>
+      <a-form-item label="出版社" name="publisherId">
+        <a-select
+          v-model:value="dialogForm.publisherId"
+          style="width: 100%"
+          placeholder="请指定出版社"
+          :options="publisherOptions"
+        >
+        </a-select>
+      </a-form-item>
+      <a-form-item label="ISBN" name="isbn">
+        <Input v-model:value="dialogForm.isbn" placeholder="请输入ISBN" :icon="GlobalOutlined" />
+      </a-form-item>
+      <a-form-item label="语言" name="language">
+        <Input
+          v-model:value="dialogForm.language"
+          placeholder="请输入语言"
+          :icon="FontColorsOutlined"
+        />
+      </a-form-item>
+      <!-- <a-form-item label="封面" name="coverUrl">
       <a-input v-model:value="dialogForm.coverUrl" />
     </a-form-item> -->
-    <a-form-item label="简介" name="introduction">
-      <a-textarea v-model:value="dialogForm.introduction" :rows="4" placeholder="请输入简介" />
-    </a-form-item>
-    <a-form-item label="出版日期" name="publishDate">
-      <a-date-picker
-        class="w-full"
-        v-model:value="dialogForm.publishDate"
-        value-format="YYYY-MM-DD"
-        placeholder="请指定出版日期"
-      />
-    </a-form-item>
-    <a-form-item label="价格" name="price">
-      <a-input-number
-        class="w-full"
-        v-model:value="dialogForm.price"
-        :min="0"
-        placeholder="请输入价格"
-      />
-    </a-form-item>
-    <a-form-item label="数量" name="number">
-      <a-input-number
-        class="w-full"
-        v-model:value="dialogForm.number"
-        :min="0"
-        placeholder="请输入数量"
-      />
-    </a-form-item>
-  </EditDialog>
+      <a-form-item label="简介" name="introduction">
+        <a-textarea v-model:value="dialogForm.introduction" :rows="4" placeholder="请输入简介" />
+      </a-form-item>
+      <a-form-item label="出版日期" name="publishDate">
+        <a-date-picker
+          class="w-full"
+          v-model:value="dialogForm.publishDate"
+          value-format="YYYY-MM-DD"
+          placeholder="请指定出版日期"
+        />
+      </a-form-item>
+      <a-form-item label="价格" name="price">
+        <a-input-number
+          class="w-full"
+          v-model:value="dialogForm.price"
+          :min="0"
+          placeholder="请输入价格"
+        />
+      </a-form-item>
+      <a-form-item label="数量" name="number">
+        <a-input-number
+          class="w-full"
+          v-model:value="dialogForm.number"
+          :min="0"
+          placeholder="请输入数量"
+        />
+      </a-form-item>
+    </EditDialog>
+  </div>
 </template>
 <style></style>

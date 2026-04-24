@@ -154,64 +154,66 @@ const dialogRule: Record<string, Rule[]> = {
 }
 </script>
 <template>
-  <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
-    <a-form-item label="用户名" name="username">
-      <Input
-        v-model:value="SearchFormObj.username"
-        placeholder="请输入用户名"
-        :icon="BankOutlined"
-      />
-    </a-form-item>
-    <a-form-item label="姓名" name="name">
-      <Input v-model:value="SearchFormObj.name" placeholder="请输入姓名" :icon="BankOutlined" />
-    </a-form-item>
-  </SearchForm>
+  <div>
+    <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
+      <a-form-item label="用户名" name="username">
+        <Input
+          v-model:value="SearchFormObj.username"
+          placeholder="请输入用户名"
+          :icon="BankOutlined"
+        />
+      </a-form-item>
+      <a-form-item label="姓名" name="name">
+        <Input v-model:value="SearchFormObj.name" placeholder="请输入姓名" :icon="BankOutlined" />
+      </a-form-item>
+    </SearchForm>
 
-  <ButtonGroup
-    :deleteItemCount="selectedRowKeys.length"
-    @add="() => showModal('add')"
-    @delete="handleBatchDelete"
-    @refresh="pageQuery"
-  />
+    <ButtonGroup
+      :deleteItemCount="selectedRowKeys.length"
+      @add="() => showModal('add')"
+      @delete="handleBatchDelete"
+      @refresh="pageQuery"
+    />
 
-  <PageTable
-    v-model:pageParams="pageParams"
-    v-model:selectedRowKeys="selectedRowKeys"
-    :total="total"
-    :columns="columns"
-    :tableData="tableData"
-    @pageQuery="pageQuery"
-    @selectChange="onSelectChange"
-  >
-    <template #tableBodyCell="{ column, record }">
-      <template v-if="column.key === 'action'">
-        <span>
-          <a-button type="link" @click="() => showModal('edit', record.id)">编辑</a-button>
-          <a-button type="link" danger @click="() => handleDelete(record.id)">删除</a-button>
-        </span>
+    <PageTable
+      v-model:pageParams="pageParams"
+      v-model:selectedRowKeys="selectedRowKeys"
+      :total="total"
+      :columns="columns"
+      :tableData="tableData"
+      @pageQuery="pageQuery"
+      @selectChange="onSelectChange"
+    >
+      <template #tableBodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <span>
+            <a-button type="link" @click="() => showModal('edit', record.id)">编辑</a-button>
+            <a-button type="link" danger @click="() => handleDelete(record.id)">删除</a-button>
+          </span>
+        </template>
       </template>
-    </template>
-  </PageTable>
+    </PageTable>
 
-  <EditDialog
-    v-model:open="open"
-    addTitle="新增用户"
-    editTitle="编辑用户"
-    :mode="mode"
-    :dialogForm="dialogForm"
-    :dialogRule="dialogRule"
-    :handleAdd="handleAdd"
-    :handleEdit="handleEdit"
-  >
-    <a-form-item label="用户名" name="username">
-      <Input v-model:value="dialogForm.username" placeholder="请输入用户名" />
-    </a-form-item>
-    <a-form-item v-if="mode === 'add'" label="密码" name="password">
-      <a-input-password v-model:value="dialogForm.password" placeholder="请输入密码" />
-    </a-form-item>
-    <a-form-item label="姓名" name="name">
-      <Input v-model:value="dialogForm.name" placeholder="请输入姓名" />
-    </a-form-item>
-  </EditDialog>
+    <EditDialog
+      v-model:open="open"
+      addTitle="新增用户"
+      editTitle="编辑用户"
+      :mode="mode"
+      :dialogForm="dialogForm"
+      :dialogRule="dialogRule"
+      :handleAdd="handleAdd"
+      :handleEdit="handleEdit"
+    >
+      <a-form-item label="用户名" name="username">
+        <Input v-model:value="dialogForm.username" placeholder="请输入用户名" />
+      </a-form-item>
+      <a-form-item v-if="mode === 'add'" label="密码" name="password">
+        <a-input-password v-model:value="dialogForm.password" placeholder="请输入密码" />
+      </a-form-item>
+      <a-form-item label="姓名" name="name">
+        <Input v-model:value="dialogForm.name" placeholder="请输入姓名" />
+      </a-form-item>
+    </EditDialog>
+  </div>
 </template>
 <style></style>

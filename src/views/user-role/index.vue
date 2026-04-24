@@ -170,72 +170,74 @@ const dialogRule: Record<string, Rule[]> = {
 }
 </script>
 <template>
-  <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
-    <a-form-item label="角色名" name="roleId">
-      <a-select
-        v-model:value="SearchFormObj.roleId"
-        style="width: 160px"
-        placeholder="请指定角色名"
-        :options="roleOptions"
-      >
-      </a-select>
-    </a-form-item>
-  </SearchForm>
+  <div>
+    <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
+      <a-form-item label="角色名" name="roleId">
+        <a-select
+          v-model:value="SearchFormObj.roleId"
+          style="width: 160px"
+          placeholder="请指定角色名"
+          :options="roleOptions"
+        >
+        </a-select>
+      </a-form-item>
+    </SearchForm>
 
-  <ButtonGroup
-    :deleteItemCount="selectedRowKeys.length"
-    @add="() => showModal('add')"
-    @delete="handleBatchDelete"
-    @refresh="pageQuery"
-  />
+    <ButtonGroup
+      :deleteItemCount="selectedRowKeys.length"
+      @add="() => showModal('add')"
+      @delete="handleBatchDelete"
+      @refresh="pageQuery"
+    />
 
-  <PageTable
-    v-model:pageParams="pageParams"
-    v-model:selectedRowKeys="selectedRowKeys"
-    :total="total"
-    :columns="columns"
-    :tableData="tableData"
-    @pageQuery="pageQuery"
-    @selectChange="onSelectChange"
-  >
-    <template #tableBodyCell="{ column, record }">
-      <template v-if="column.key === 'action'">
-        <span>
-          <a-button type="link" @click="() => showModal('edit', record.id)">编辑</a-button>
-          <a-button type="link" danger @click="() => handleDelete(record.id)">删除</a-button>
-        </span>
+    <PageTable
+      v-model:pageParams="pageParams"
+      v-model:selectedRowKeys="selectedRowKeys"
+      :total="total"
+      :columns="columns"
+      :tableData="tableData"
+      @pageQuery="pageQuery"
+      @selectChange="onSelectChange"
+    >
+      <template #tableBodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <span>
+            <a-button type="link" @click="() => showModal('edit', record.id)">编辑</a-button>
+            <a-button type="link" danger @click="() => handleDelete(record.id)">删除</a-button>
+          </span>
+        </template>
       </template>
-    </template>
-  </PageTable>
+    </PageTable>
 
-  <EditDialog
-    v-model:open="open"
-    addTitle="新增出版社"
-    editTitle="编辑出版社"
-    :mode="mode"
-    :dialogForm="dialogForm"
-    :dialogRule="dialogRule"
-    :handleAdd="handleAdd"
-    :handleEdit="handleEdit"
-  >
-    <a-form-item label="用户" name="userId">
-      <a-select
-        v-model:value="dialogForm.userId"
-        style="width: 100%"
-        placeholder="请指定用户"
-        :options="userOptions"
-      >
-      </a-select>
-    </a-form-item>
-    <a-form-item label="角色" name="roleId">
-      <a-select
-        v-model:value="dialogForm.roleId"
-        style="width: 100%"
-        placeholder="请指定角色"
-        :options="roleOptions"
-      >
-      </a-select>
-    </a-form-item>
-  </EditDialog>
+    <EditDialog
+      v-model:open="open"
+      addTitle="新增出版社"
+      editTitle="编辑出版社"
+      :mode="mode"
+      :dialogForm="dialogForm"
+      :dialogRule="dialogRule"
+      :handleAdd="handleAdd"
+      :handleEdit="handleEdit"
+    >
+      <a-form-item label="用户" name="userId">
+        <a-select
+          v-model:value="dialogForm.userId"
+          style="width: 100%"
+          placeholder="请指定用户"
+          :options="userOptions"
+        >
+        </a-select>
+      </a-form-item>
+      <a-form-item label="角色" name="roleId">
+        <a-select
+          v-model:value="dialogForm.roleId"
+          style="width: 100%"
+          placeholder="请指定角色"
+          :options="roleOptions"
+        >
+        </a-select>
+      </a-form-item>
+    </EditDialog>
+  </div>
 </template>
 <style></style>
