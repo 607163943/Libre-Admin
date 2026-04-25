@@ -5,7 +5,6 @@ import {
   BankOutlined,
   SwapOutlined,
   SafetyCertificateOutlined,
-  SolutionOutlined,
   HomeOutlined,
   SecurityScanOutlined,
   TeamOutlined
@@ -78,12 +77,6 @@ const menuItems = [
     keyName: 'Role',
     icon: TeamOutlined,
     label: '角色管理'
-  },
-  {
-    key: '/user-role',
-    keyName: 'UserRole',
-    icon: SolutionOutlined,
-    label: '用户角色管理'
   },
   {
     key: '/permission',

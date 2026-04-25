@@ -19,7 +19,8 @@ const routeNameMap: Record<string, string> = {
   Lend: '借阅管理',
   User: '用户管理',
   Role: '角色管理',
-  UserRole: '用户角色管理'
+  Permission: '权限管理',
+  RolePermission: '角色权限管理'
 }
 
 interface BreadcrumbItem {
@@ -78,69 +79,69 @@ const navigateTo = (name: string, isLast: boolean) => {
     <div class="flex items-center flex-nowrap whitespace-nowrap px-1 py-2 my-2 overflow-hidden">
       <transition name="breadcrumb" mode="out-in">
         <a-breadcrumb :key="String(route.name)" class="select-none flex-nowrap whitespace-nowrap">
-        <!-- 自定义分隔符 -->
-        <template #separator>
-          <a-config-provider
-            :theme="{
-              components: {
-                Breadcrumb: {
-                  separatorColor: '#d1d5db',
-                  separatorMargin: 8
+          <!-- 自定义分隔符 -->
+          <template #separator>
+            <a-config-provider
+              :theme="{
+                components: {
+                  Breadcrumb: {
+                    separatorColor: '#d1d5db',
+                    separatorMargin: 8
+                  }
                 }
-              }
-            }"
+              }"
+            >
+              <RightOutlined class="text-gray-300 text-[10px]" />
+            </a-config-provider>
+          </template>
+
+          <a-breadcrumb-item
+            v-for="item in breadcrumbs"
+            :key="item.name"
+            class="!inline-flex !items-center !whitespace-nowrap"
           >
-            <RightOutlined class="text-gray-300 text-[10px]" />
-          </a-config-provider>
-        </template>
-
-        <a-breadcrumb-item
-          v-for="item in breadcrumbs"
-          :key="item.name"
-          class="!inline-flex !items-center !whitespace-nowrap"
-        >
-          <!-- 非末级：可点击链接，局部定制 hover 色 -->
-          <template v-if="!item.isLast">
-            <a-config-provider
-              :theme="{
-                components: {
-                  Breadcrumb: {
-                    linkColor: '#6b7280',
-                    linkHoverColor: '#1677ff'
+            <!-- 非末级：可点击链接，局部定制 hover 色 -->
+            <template v-if="!item.isLast">
+              <a-config-provider
+                :theme="{
+                  components: {
+                    Breadcrumb: {
+                      linkColor: '#6b7280',
+                      linkHoverColor: '#1677ff'
+                    }
                   }
-                }
-              }"
-            >
-              <span
-                class="inline-flex items-center gap-1 cursor-pointer rounded px-1.5 py-0.5 text-gray-500 transition-all duration-200 hover:text-blue-500 hover:bg-blue-50"
-                @click="navigateTo(item.name, item.isLast)"
+                }"
               >
-                <HomeOutlined v-if="item.name === 'Home'" class="text-[13px]" />
-                {{ item.label }}
-              </span>
-            </a-config-provider>
-          </template>
+                <span
+                  class="inline-flex items-center gap-1 cursor-pointer rounded px-1.5 py-0.5 text-gray-500 transition-all duration-200 hover:text-blue-500 hover:bg-blue-50"
+                  @click="navigateTo(item.name, item.isLast)"
+                >
+                  <HomeOutlined v-if="item.name === 'Home'" class="text-[13px]" />
+                  {{ item.label }}
+                </span>
+              </a-config-provider>
+            </template>
 
-          <!-- 末级：当前页，不可点击，局部加粗高亮 -->
-          <template v-else>
-            <a-config-provider
-              :theme="{
-                components: {
-                  Breadcrumb: {
-                    lastItemColor: '#111827'
+            <!-- 末级：当前页，不可点击，局部加粗高亮 -->
+            <template v-else>
+              <a-config-provider
+                :theme="{
+                  components: {
+                    Breadcrumb: {
+                      lastItemColor: '#111827'
+                    }
                   }
-                }
-              }"
-            >
-              <span
-                class="inline-flex items-center gap-1 font-semibold text-gray-900 rounded px-1.5 py-0.5 bg-gray-100"
+                }"
               >
-                <HomeOutlined v-if="item.name === 'Home'" class="text-[13px]" />
-                {{ item.label }}
-              </span>
-            </a-config-provider>
-          </template>
-        </a-breadcrumb-item>
+                <span
+                  class="inline-flex items-center gap-1 font-semibold text-gray-900 rounded px-1.5 py-0.5 bg-gray-100"
+                >
+                  <HomeOutlined v-if="item.name === 'Home'" class="text-[13px]" />
+                  {{ item.label }}
+                </span>
+              </a-config-provider>
+            </template>
+          </a-breadcrumb-item>
         </a-breadcrumb>
       </transition>
     </div>

@@ -11,3 +11,8 @@ export interface TableRoleData {
   id: number
   roleName: string
 }
+
+export interface RoleItem {
+  id: number
+  roleName: string
+}

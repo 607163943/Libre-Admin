@@ -7,6 +7,7 @@ import PageTable from '@/components/PageTable.vue'
 import EditDialog from '@/components/EditDialog.vue'
 import ButtonGroup from '@/components/ButtonGroup.vue'
 import Input from '@/components/Input.vue'
+import AssignRoleDialog from './AssignRoleDialog.vue'
 import type { UserDialogForm, UserSearchForm, TableUserData } from '@/types/user'
 import type { PageParams } from '@/types/common'
 import type { Key } from '@/types/common'
@@ -105,7 +106,7 @@ const pageParams = ref<PageParams>({
   pageSize: 10
 })
 
-// 对话框
+// 编辑/新增对话框
 const mode = ref<string>('add')
 const open = ref<boolean>(false)
 
@@ -117,6 +118,15 @@ const showModal = (openMode: string, id?: number) => {
     })
   }
   open.value = true
+}
+
+// 分配角色对话框
+const assignRoleOpen = ref<boolean>(false)
+const assignRoleUserId = ref<number | string | undefined>(undefined)
+
+const showAssignRoleDialog = (userId: number) => {
+  assignRoleUserId.value = userId
+  assignRoleOpen.value = true
 }
 
 const handleAdd = () => {
@@ -188,6 +198,7 @@ const dialogRule: Record<string, Rule[]> = {
         <template v-if="column.key === 'action'">
           <span>
             <a-button type="link" @click="() => showModal('edit', record.id)">编辑</a-button>
+            <a-button type="link" @click="() => showAssignRoleDialog(record.id)">添加角色</a-button>
             <a-button type="link" danger @click="() => handleDelete(record.id)">删除</a-button>
           </span>
         </template>
@@ -214,6 +225,12 @@ const dialogRule: Record<string, Rule[]> = {
         <Input v-model:value="dialogForm.name" placeholder="请输入姓名" />
       </a-form-item>
     </EditDialog>
+
+    <AssignRoleDialog
+      v-model:open="assignRoleOpen"
+      :userId="assignRoleUserId"
+      @success="pageQuery"
+    />
   </div>
 </template>
 <style></style>

@@ -7,7 +7,6 @@ import Author from '@/views/author/index.vue'
 import Publisher from '@/views/publisher/index.vue'
 import Lend from '@/views/lend/index.vue'
 import Role from '@/views/role/index.vue'
-import UserRole from '@/views/user-role/index.vue'
 import Login from '@/views/login/index.vue'
 import Permission from '@/views/permission/index.vue'
 import RolePermission from '@/views/role-permission/index.vue'
@@ -34,11 +33,6 @@ const router = createRouter({
           path: 'role',
           name: 'Role',
           component: Role
-        },
-        {
-          path: 'user-role',
-          name: 'UserRole',
-          component: UserRole
         },
         {
           path: 'book',
