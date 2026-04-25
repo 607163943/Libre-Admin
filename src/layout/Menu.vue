@@ -67,6 +67,12 @@ const menuItems = [
     label: '借阅管理'
   },
   {
+    key: '/module',
+    keyName: 'Module',
+    icon: SwapOutlined,
+    label: '模块管理'
+  },
+  {
     key: '/user',
     keyName: 'User',
     icon: UserOutlined,

@@ -17,6 +17,7 @@ const routeNameMap: Record<string, string> = {
   Author: '作者管理',
   Publisher: '出版社管理',
   Lend: '借阅管理',
+  Module: '模块管理',
   User: '用户管理',
   Role: '角色管理',
   Permission: '权限管理',
