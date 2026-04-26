@@ -197,7 +197,7 @@ const dialogForm = ref<LendDialogForm>({
   state: undefined,
   renewCount: 0,
   returnTime: '',
-  dueTime: ''
+  lendTime: ''
 })
 
 const dialogRule: Record<string, Rule[]> = {

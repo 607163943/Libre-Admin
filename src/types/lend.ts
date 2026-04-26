@@ -10,8 +10,8 @@ export interface LendDialogForm {
   bookId: number | undefined
   state: number | undefined
   renewCount: number
+  lendTime: string
   returnTime: string
-  dueTime: string
 }
 
 export interface TableLendData {

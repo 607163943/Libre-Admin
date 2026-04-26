@@ -1,5 +1,10 @@
 import request from '@/utils/request'
-import type { PermissionForm, TablePermissionData, PermissionDialogForm } from '@/types/permission'
+import type {
+  PermissionForm,
+  TablePermissionData,
+  PermissionDialogForm,
+  PermissionCodeForm
+} from '@/types/permission'
 import type { Result, PageResult } from '@/types/common'
 
 // 分页查询权限
@@ -15,6 +20,11 @@ export const getPermission = (id: number) => {
 // 获取所有权限
 export const getAllPermission = () => {
   return request.get<Result<PermissionDialogForm[]>>('/permission/all')
+}
+
+// 获取所有权限(完整权限码)
+export const getAllPermissionWithCode = () => {
+  return request.get<Result<PermissionCodeForm[]>>('/permission/all-code')
 }
 
 // 添加权限

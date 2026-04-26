@@ -80,6 +80,7 @@ const handleOk = async () => {
 
 // 取消
 const handleCancel = () => {
+  dataSource.value = []
   targetKeys.value = []
   open.value = false
 }

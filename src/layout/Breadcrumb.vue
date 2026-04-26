@@ -20,8 +20,7 @@ const routeNameMap: Record<string, string> = {
   Module: '模块管理',
   User: '用户管理',
   Role: '角色管理',
-  Permission: '权限管理',
-  RolePermission: '角色权限管理'
+  Permission: '权限管理'
 }
 
 interface BreadcrumbItem {

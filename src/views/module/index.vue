@@ -231,8 +231,8 @@ const dialogRule: Record<string, Rule[]> = {
       </a-form-item>
       <a-form-item label="客户端类型" name="clientType">
         <a-select v-model:value="dialogForm.clientType" placeholder="请选择客户端类型">
-          <a-select-option value="1">管理端</a-select-option>
-          <a-select-option value="2">app端</a-select-option>
+          <a-select-option :value="1">管理端</a-select-option>
+          <a-select-option :value="2">app端</a-select-option>
         </a-select>
       </a-form-item>
     </EditDialog>
