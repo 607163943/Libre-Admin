@@ -20,7 +20,7 @@ export interface TableLendData {
   bookName: string
   renewCount: number
   lendTime: string
-  returnTime: string
   dueTime: string
+  returnTime: string
   status: number
 }

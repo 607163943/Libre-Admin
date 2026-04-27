@@ -11,6 +11,7 @@ import { pageQueryLend, deleteLend, addLend, getLend, editLend, deleteBatchLend 
 import { message, type SelectProps } from 'ant-design-vue'
 import { getAllUser } from '@/api/user'
 import { getAllBook } from '@/api/book'
+import dayjs from 'dayjs'
 // 全局参数
 const userOptions = ref<SelectProps['options']>([])
 const bookOptions = ref<SelectProps['options']>([])
@@ -114,14 +115,19 @@ const columns = [
     key: 'renewCount'
   },
   {
-    title: '归还时间',
-    dataIndex: 'returnTime',
-    key: 'returnTime'
+    title: '借阅时间',
+    dataIndex: 'lendTime',
+    key: 'lendTime'
   },
   {
     title: '到期时间',
     dataIndex: 'dueTime',
     key: 'dueTime'
+  },
+  {
+    title: '归还时间',
+    dataIndex: 'returnTime',
+    key: 'returnTime'
   },
   {
     title: 'Action',
@@ -194,10 +200,10 @@ const dialogForm = ref<LendDialogForm>({
   id: '',
   userId: undefined,
   bookId: undefined,
-  state: undefined,
+  state: 1,
   renewCount: 0,
-  returnTime: '',
-  lendTime: ''
+  lendTime: '',
+  returnTime: ''
 })
 
 const dialogRule: Record<string, Rule[]> = {
@@ -205,8 +211,7 @@ const dialogRule: Record<string, Rule[]> = {
   bookId: [{ required: true, message: '请输入图书id!' }],
   state: [{ required: true, message: '请输入借阅状态!' }],
   renewCount: [{ required: true, message: '请输入续阅次数!' }],
-  returnTime: [{ required: true, message: '请输入应还时间!' }],
-  dueTime: [{ required: true, message: '请输入到期时间!' }]
+  lendTime: [{ required: true, message: '请输入借阅时间!' }]
 }
 </script>
 <template>
@@ -304,12 +309,41 @@ const dialogRule: Record<string, Rule[]> = {
       </a-form-item>
       <a-form-item label="借阅状态" name="state">
         <a-select
+          :disabled="mode === 'add'"
           v-model:value="dialogForm.state"
           style="width: 100%"
           placeholder="请指定借阅状态"
           :options="stateOptions"
         >
         </a-select>
+      </a-form-item>
+      <a-form-item label="续阅次数" name="renewCount">
+        <a-input-number
+          :min="0"
+          :max="3"
+          v-model:value="dialogForm.renewCount"
+          placeholder="请输入续阅次数"
+        />
+      </a-form-item>
+      <a-form-item label="借阅时间" name="lendTime">
+        <a-date-picker
+          v-model:value="dialogForm.lendTime"
+          show-time
+          placeholder="请指定借阅时间"
+          :value-format="'yyyy-MM-dd HH:mm:ss'"
+        />
+      </a-form-item>
+      <a-form-item
+        label="归还时间"
+        name="returnTime"
+        v-if="dialogForm.state && dialogForm.state === 2"
+      >
+        <a-date-picker
+          v-model:value="dialogForm.returnTime"
+          show-time
+          placeholder="请指定归还时间"
+          :value-format="'yyyy-MM-dd HH:mm:ss'"
+        />
       </a-form-item>
     </EditDialog>
   </div>
