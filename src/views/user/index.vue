@@ -176,14 +176,15 @@ const dialogRule: Record<string, Rule[]> = {
       <a-form-item label="姓名" name="name">
         <Input v-model:value="SearchFormObj.name" placeholder="请输入姓名" :icon="BankOutlined" />
       </a-form-item>
-    </SearchForm>
-
-    <ButtonGroup
+          <template #buttons>
+        <ButtonGroup
       :deleteItemCount="selectedRowKeys.length"
       @add="() => showModal('add')"
       @delete="handleBatchDelete"
       @refresh="pageQuery"
     />
+      </template>
+    </SearchForm>
 
     <PageTable
       v-model:pageParams="pageParams"

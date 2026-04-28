@@ -7,7 +7,7 @@ const { searchForm } = defineProps<{
 }>()
 </script>
 <template>
-  <div>
+  <div class="bg-white p-4 rounded-lg mb-4">
     <a-form :model="searchForm" name="horizontal_login" layout="inline" autocomplete="off">
       <slot></slot>
       <a-form-item>
@@ -17,5 +17,8 @@ const { searchForm } = defineProps<{
         <a-button @click="() => $emit('reset')"> <ReloadOutlined />重置 </a-button>
       </a-form-item>
     </a-form>
+    
+    <!-- 操作按钮组插槽 -->
+    <slot name="buttons"></slot>
   </div>
 </template>

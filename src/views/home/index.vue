@@ -312,10 +312,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-6 space-y-6 min-h-full bg-gray-50">
+  <div class="space-y-4 min-h-full">
     <!-- 欢迎卡片 -->
     <section
-      class="bg-white rounded-2xl p-7 flex flex-col md:flex-row justify-between items-center shadow-sm relative overflow-hidden border border-gray-100"
+      class="bg-white rounded-lg p-7 flex flex-col md:flex-row justify-between items-center shadow-sm relative overflow-hidden border border-gray-100"
     >
       <!-- Decorative background blob -->
       <div
@@ -344,11 +344,11 @@ onMounted(() => {
     </section>
 
     <!-- 统计卡片 -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-5">
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-3">
       <!-- Card 1: Total Books -->
       <a-card
         :loading="statsLoading"
-        class="rounded-xl shadow-sm border-0 overflow-hidden"
+        class="rounded-lg shadow-sm border-0 overflow-hidden"
         :body-style="{ padding: '24px' }"
       >
         <div class="flex justify-between items-start">
@@ -415,7 +415,7 @@ onMounted(() => {
     <!-- 借阅趋势 + 热门书籍 -->
     <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
       <!-- 借阅趋势 -->
-      <a-card class="lg:col-span-7 rounded-xl shadow-sm border-0" :body-style="{ padding: '28px' }">
+      <a-card class="lg:col-span-7 rounded-lg shadow-sm border-0" :body-style="{ padding: '28px' }">
         <!-- Card header -->
         <div class="flex justify-between items-center mb-5">
           <div>
@@ -433,7 +433,7 @@ onMounted(() => {
       </a-card>
 
       <!-- 热门书籍 -->
-      <a-card class="lg:col-span-5 rounded-xl shadow-sm border-0" :body-style="{ padding: '28px' }">
+      <a-card class="lg:col-span-5 rounded-lg shadow-sm border-0" :body-style="{ padding: '28px' }">
         <!-- Card header -->
         <div class="flex justify-between items-center mb-5">
           <h3 class="text-base font-bold text-gray-800">

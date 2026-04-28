@@ -144,7 +144,7 @@ function onMenuClick({ key }: { key: string }) {
 
       <a-layout-content style="margin: 0 16px" class="flex flex-col">
         <slot name="breadcrumb"></slot>
-        <div :style="{ padding: '24px', background: '#fff' }" class="flex-auto">
+        <div class="flex-auto">
           <slot name="content"></slot>
         </div>
       </a-layout-content>

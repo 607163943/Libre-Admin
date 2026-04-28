@@ -17,10 +17,17 @@ const routeNameMap: Record<string, string> = {
   Author: '作者管理',
   Publisher: '出版社管理',
   Lend: '借阅管理',
+  Message: '消息管理',
+  MessageEdit: '消息编辑',
   Module: '模块管理',
   User: '用户管理',
   Role: '角色管理',
   Permission: '权限管理'
+}
+
+// 路由父子关系映射（用于构建多级面包屑）
+const routeParentMap: Record<string, string> = {
+  MessageEdit: 'Message'
 }
 
 interface BreadcrumbItem {
@@ -41,13 +48,31 @@ const breadcrumbs = computed<BreadcrumbItem[]>(() => {
     isLast: currentName === 'Home'
   })
 
-  // 非首页时追加当前页
-  if (currentName && currentName !== 'Home' && routeNameMap[currentName]) {
-    items.push({
-      name: currentName,
-      label: routeNameMap[currentName],
-      isLast: true
-    })
+  // 非首页时处理当前页及可能的父级页面
+  if (currentName && currentName !== 'Home') {
+    // 收集所有父级页面
+    const parents: BreadcrumbItem[] = []
+    let pName = routeParentMap[currentName]
+    while (pName) {
+      if (routeNameMap[pName]) {
+        parents.unshift({
+          name: pName,
+          label: routeNameMap[pName]!,
+          isLast: false
+        })
+      }
+      pName = routeParentMap[pName]
+    }
+    items.push(...parents)
+
+    // 添加当前页
+    if (routeNameMap[currentName]) {
+      items.push({
+        name: currentName,
+        label: routeNameMap[currentName],
+        isLast: true
+      })
+    }
   }
 
   return items

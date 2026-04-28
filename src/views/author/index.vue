@@ -100,14 +100,16 @@ const dialogRule: Record<string, Rule[]> = {
 </script>
 <template>
   <div>
-    <AuthorSearch />
-
-    <ButtonGroup
-      :deleteItemCount="selectedRowKeys.length"
-      @add="() => showModal('add')"
-      @delete="handleBatchDelete"
-      @refresh="pageQuery"
-    />
+    <AuthorSearch>
+      <template #button>
+        <ButtonGroup
+          :deleteItemCount="selectedRowKeys.length"
+          @add="() => showModal('add')"
+          @delete="handleBatchDelete"
+          @refresh="pageQuery"
+        />
+      </template>
+    </AuthorSearch>
 
     <PageTable
       v-model:pageParams="pageParams"

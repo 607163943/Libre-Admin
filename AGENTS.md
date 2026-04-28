@@ -76,17 +76,18 @@ const value = ref<string>('')
 - **`src/components/`**: **公共业务组件**。跨页面复用的组件存放于此。
 - **`src/layout/`**: **页面布局组件**。定义系统的整体框架结构（如侧边栏、顶栏）。
 - **`src/styles/`**: **全局样式**。存放 Tailwind CSS 的入口文件及全局 CSS 变量。
+- **`src/utils/`**：**工具文件**。存放一些通用工具类。
 
 ---
 
 ### 开发常用修改路径清单
 
-| 需求类型         | 修改/新建路径                           | 说明                                   |
-| :--------------- | :-------------------------------------- | :------------------------------------- |
-| **新增页面**     | `src/views/{module}/{Page}.vue`         | 同时需在 `src/router` 中配置路由       |
-| **对接新接口**   | `src/api/{module}.ts`                   | 必须同步更新 `src/types/` 下的类型定义 |
-| **定义数据模型** | `src/types/{module}.ts`                 | 确保前端数据结构与后端 DTO 一致        |
-| **全局状态变更** | `src/stores/modules/{module}.ts`        | 如用户信息、权限菜单等持久化数据       |
-| **配置调整**     | `tailwind.config.js` / `vite.config.ts` | 涉及样式插件或 Vite 编译插件时修改     |
+| 需求类型         | 修改/新建路径                           | 说明                                                         |
+| :--------------- | :-------------------------------------- | :----------------------------------------------------------- |
+| **新增页面**     | `src/views/{module}/{Page}.vue`         | 同时需在 `src/router` 中配置路由、`src/layout/Menu.vue`中添加菜单、`src/layout/Breadcrumb.vue`中添加面包屑文本 |
+| **对接新接口**   | `src/api/{module}.ts`                   | 必须同步更新 `src/types/` 下的类型定义                       |
+| **定义数据模型** | `src/types/{module}.ts`                 | 确保数据类型和要求一致                                       |
+| **全局状态变更** | `src/stores/modules/{module}.ts`        | 如用户信息、权限菜单等持久化数据                             |
+| **配置调整**     | `tailwind.config.js` / `vite.config.ts` | 涉及样式插件或 Vite 编译插件时修改                           |
 
 ---

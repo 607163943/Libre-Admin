@@ -1,16 +1,20 @@
 <script setup lang="ts" generic="T extends object">
-import { toRefs } from 'vue'
+import { toRefs, computed, type Ref } from 'vue'
 import { useLayoutStore } from '@/stores/modules/layout'
 import { storeToRefs } from 'pinia'
 import type { PageParams, Key } from '@/types/common'
 
+interface TableColumn {
+  title: string
+  dataIndex?: string
+  key: string
+  fixed?: 'left' | 'right' | boolean
+  width?: number | string
+}
+
 // 全局
 const props = defineProps<{
-  columns: {
-    title: string
-    dataIndex?: string
-    key: string
-  }[]
+  columns: TableColumn[]
   tableData: T[]
   total: number
 }>()
@@ -20,6 +24,23 @@ const emit = defineEmits(['selectChange', 'update:pageParams', 'pageQuery'])
 const layoutStore = useLayoutStore()
 const { isMobile } = storeToRefs(layoutStore)
 const { columns, tableData } = toRefs(props)
+
+// 自动将 action 列固定在右侧
+const handleTableColumn = (columns: TableColumn[]) => {
+  if (columns.length < 5) {
+    return columns
+  }
+  return columns.map((col) => {
+    if (col.key === 'action') {
+      return {
+        ...col,
+        fixed: col.fixed !== undefined ? col.fixed : 'right',
+        width: col.width || 150
+      }
+    }
+    return col
+  })
+}
 
 const selectedRowKeys = defineModel<Key[]>('selectedRowKeys', {
   required: true
@@ -43,18 +64,18 @@ const pageParams = defineModel<PageParams>('pageParams', {
 })
 </script>
 <template>
-  <div>
-    <div class="mt-4">
+  <div class="bg-white p-4 rounded-lg">
+    <div>
       <!-- 该表格通过卸载、重新渲染来解决PC端和移动端重复切换时，表格滚动条渲染后固定存在的问题 -->
       <!-- 每次切换都是重新渲染，性能优化时注意这个组件 -->
       <a-table
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :row-key="(record: { id: number }) => record.id"
-        :columns="columns"
+        :columns="handleTableColumn(columns)"
         :data-source="tableData"
         :pagination="false"
         :key="isMobile ? 'mobile-table' : 'pc-table'"
-        :scroll="isMobile ? { x: 1500 } : undefined"
+        :scroll="{ x: isMobile ? 1500 : 'max-content' }"
       >
         <template #bodyCell="{ column, record }">
           <slot name="tableBodyCell" :column="column" :record="record" />

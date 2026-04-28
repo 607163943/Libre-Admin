@@ -236,14 +236,15 @@ const dialogRule: Record<string, Rule[]> = {
           <a-select-option :value="2">app端</a-select-option>
         </a-select>
       </a-form-item>
-    </SearchForm>
-
-    <ButtonGroup
+          <template #buttons>
+        <ButtonGroup
       :deleteItemCount="selectedRowKeys.length"
       @add="() => showModal('add')"
       @delete="handleBatchDelete"
       @refresh="pageQuery"
     />
+      </template>
+    </SearchForm>
 
     <PageTable
       v-model:pageParams="pageParams"

@@ -263,13 +263,15 @@ const dialogRule: Record<string, Rule[]> = {
           :icon="FontColorsOutlined"
         />
       </a-form-item>
+      <template #buttons>
+        <ButtonGroup
+          :deleteItemCount="selectedRowKeys.length"
+          @add="() => showModal('add')"
+          @delete="handleBatchDelete"
+          @refresh="pageQuery"
+        />
+      </template>
     </SearchForm>
-    <ButtonGroup
-      :deleteItemCount="selectedRowKeys.length"
-      @add="() => showModal('add')"
-      @delete="handleBatchDelete"
-      @refresh="pageQuery"
-    />
 
     <PageTable
       v-model:pageParams="pageParams"

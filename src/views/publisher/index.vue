@@ -153,14 +153,15 @@ const dialogRule: Record<string, Rule[]> = {
           :icon="BankOutlined"
         />
       </a-form-item>
-    </SearchForm>
-
-    <ButtonGroup
+          <template #buttons>
+        <ButtonGroup
       :deleteItemCount="selectedRowKeys.length"
       @add="() => showModal('add')"
       @delete="handleBatchDelete"
       @refresh="pageQuery"
     />
+      </template>
+    </SearchForm>
 
     <PageTable
       v-model:pageParams="pageParams"

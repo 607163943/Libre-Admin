@@ -21,13 +21,18 @@ const handleReset = () => {
 }
 </script>
 <template>
-  <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
-    <a-form-item label="作者名" name="authorName">
-      <Input
-        v-model:value="SearchFormObj.authorName"
-        placeholder="请输入作者名"
-        :icon="UserOutlined"
-      />
-    </a-form-item>
-  </SearchForm>
+  <div>
+    <SearchForm :searchForm="SearchFormObj" @search="handleSearch" @reset="handleReset">
+      <a-form-item label="作者名" name="authorName">
+        <Input
+          v-model:value="SearchFormObj.authorName"
+          placeholder="请输入作者名"
+          :icon="UserOutlined"
+        />
+      </a-form-item>
+      <template #buttons>
+        <slot name="button"></slot>
+      </template>
+    </SearchForm>
+  </div>
 </template>

@@ -7,7 +7,8 @@ import {
   SafetyCertificateOutlined,
   HomeOutlined,
   TeamOutlined,
-  UnorderedListOutlined
+  UnorderedListOutlined,
+  MessageOutlined
 } from '@ant-design/icons-vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -65,6 +66,12 @@ const menuItems = [
     keyName: 'Lend',
     icon: SwapOutlined,
     label: '借阅管理'
+  },
+  {
+    key: '/message',
+    keyName: 'Message',
+    icon: MessageOutlined,
+    label: '消息管理'
   },
   {
     key: '/module',
