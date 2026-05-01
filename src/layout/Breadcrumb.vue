@@ -22,12 +22,15 @@ const routeNameMap: Record<string, string> = {
   Module: '模块管理',
   User: '用户管理',
   Role: '角色管理',
-  Permission: '权限管理'
+  Permission: '权限管理',
+  MessageList: '我的消息',
+  MessageDetail: '消息详情'
 }
 
 // 路由父子关系映射（用于构建多级面包屑）
 const routeParentMap: Record<string, string> = {
-  MessageEdit: 'Message'
+  MessageEdit: 'Message',
+  MessageDetail: 'MessageList'
 }
 
 interface BreadcrumbItem {

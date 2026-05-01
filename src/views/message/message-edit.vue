@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, shallowRef, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import type { Rule } from 'ant-design-vue/es/form'
 import Input from '@/components/Input.vue'
 import type { MessageDialogForm } from '@/types/message'
 import { getMessage, addMessage, editMessage } from '@/api/message'
+import '@wangeditor/editor/dist/css/style.css' // 引入 css
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -71,6 +73,23 @@ const handleSave = () => {
 const handleCancel = () => {
   router.push({ name: 'Message' })
 }
+
+// 编辑器实例，必须用 shallowRef
+const editorRef = shallowRef<any>(null)
+
+const toolbarConfig = {}
+const editorConfig = { placeholder: '请输入内容...' }
+
+// 组件销毁时，也及时销毁编辑器
+onBeforeUnmount(() => {
+  const editor = editorRef.value
+  if (editor == null) return
+  editor.destroy()
+})
+
+const handleCreated = (editor: any) => {
+  editorRef.value = editor // 记录 editor 实例，重要！
+}
 </script>
 
 <template>
@@ -97,7 +116,21 @@ const handleCancel = () => {
           </a-select>
         </a-form-item>
         <a-form-item label="消息内容" name="content">
-          <a-textarea v-model:value="dialogForm.content" placeholder="请输入消息内容" :rows="6" />
+          <div class="border border-gray-200 rounded-md w-full relative z-0">
+            <Toolbar
+              class="border-b border-gray-200"
+              :editor="editorRef"
+              :defaultConfig="toolbarConfig"
+              mode="default"
+            />
+            <Editor
+              style="height: 400px; overflow-y: hidden;"
+              v-model="dialogForm.content"
+              :defaultConfig="editorConfig"
+              mode="default"
+              @onCreated="handleCreated"
+            />
+          </div>
         </a-form-item>
         <a-form-item :wrapper-col="{ offset: 4, span: 16 }">
           <a-button type="primary" @click="handleSave" :loading="loading" class="mr-4">
@@ -110,4 +143,14 @@ const handleCancel = () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+:deep(.w-e-full-screen-container) {
+  z-index: 9999;
+}
+:deep(.w-e-text-container) {
+  z-index: 1 !important;
+}
+:deep(.w-e-toolbar) {
+  z-index: 2 !important;
+}
+</style>

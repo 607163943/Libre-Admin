@@ -17,13 +17,14 @@ const props = defineProps<{
   columns: TableColumn[]
   tableData: T[]
   total: number
+  getCheckboxProps?: (record: T) => any
 }>()
 const emit = defineEmits(['selectChange', 'update:pageParams', 'pageQuery'])
 
 // 表格
 const layoutStore = useLayoutStore()
 const { isMobile } = storeToRefs(layoutStore)
-const { columns, tableData } = toRefs(props)
+const { columns, tableData, getCheckboxProps } = toRefs(props)
 
 // 自动将 action 列固定在右侧
 const handleTableColumn = (columns: TableColumn[]) => {
@@ -69,7 +70,7 @@ const pageParams = defineModel<PageParams>('pageParams', {
       <!-- 该表格通过卸载、重新渲染来解决PC端和移动端重复切换时，表格滚动条渲染后固定存在的问题 -->
       <!-- 每次切换都是重新渲染，性能优化时注意这个组件 -->
       <a-table
-        :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+        :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, getCheckboxProps }"
         :row-key="(record: { id: number }) => record.id"
         :columns="handleTableColumn(columns)"
         :data-source="tableData"

@@ -11,6 +11,8 @@ import Login from '@/views/login/index.vue'
 import Permission from '@/views/permission/index.vue'
 import Module from '@/views/module/index.vue'
 import Message from '@/views/message/index.vue'
+import MessageList from '@/views/message/message-list.vue'
+import MessageDetail from '@/views/message/message-detail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -74,6 +76,16 @@ const router = createRouter({
           path: 'message/edit',
           name: 'MessageEdit',
           component: () => import('@/views/message/message-edit.vue')
+        },
+        {
+          path: 'message/list',
+          name: 'MessageList',
+          component: MessageList
+        },
+        {
+          path: 'message/detail/:id',
+          name: 'MessageDetail',
+          component: MessageDetail
         }
       ]
     },

@@ -162,6 +162,10 @@ const dialogRule: Record<string, Rule[]> = {
   username: [{ required: true, message: '请输入用户名!' }],
   password: [{ required: true, message: '请输入密码!' }]
 }
+
+const getCheckboxProps = (record: TableUserData) => ({
+  disabled: record.username === 'admin'
+})
 </script>
 <template>
   <div>
@@ -192,12 +196,13 @@ const dialogRule: Record<string, Rule[]> = {
       :total="total"
       :columns="columns"
       :tableData="tableData"
+      :getCheckboxProps="getCheckboxProps"
       @pageQuery="pageQuery"
       @selectChange="onSelectChange"
     >
       <template #tableBodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
-          <span>
+          <span v-if="record.username !== 'admin'">
             <a-button type="link" @click="() => showModal('edit', record.id)">编辑</a-button>
             <a-button type="link" @click="() => showAssignRoleDialog(record.id)">添加角色</a-button>
             <a-button type="link" danger @click="() => handleDelete(record.id)">删除</a-button>

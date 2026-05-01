@@ -63,6 +63,10 @@ const columns = [
     key: 'state'
   },
   {
+    title: '发送人',
+    key: 'createUserId'
+  },
+  {
     title: 'Action',
     key: 'action'
   }
@@ -150,6 +154,9 @@ const handleSend = (id: number) => {
         <template v-if="column.key === 'state'">
           <a-tag v-if="record.state === 0">未发布</a-tag>
           <a-tag v-if="record.state === 1" color="green">已发布</a-tag>
+        </template>
+        <template v-if="column.key === 'createUserId'">
+          <span>{{ record.createUserId === 0 ? '系统发送' : '管理员发送' }}</span>
         </template>
         <template v-if="column.key === 'action'">
           <span>

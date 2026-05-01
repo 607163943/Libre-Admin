@@ -10,11 +10,10 @@ import {
   UnorderedListOutlined,
   MessageOutlined
 } from '@ant-design/icons-vue'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useLayoutStore } from '@/stores/modules/layout'
 import { storeToRefs } from 'pinia'
-import { useRoute } from 'vue-router'
 
 defineOptions({
   name: 'LayoutMenu'
@@ -22,7 +21,7 @@ defineOptions({
 
 const { handleToggle } = defineProps<{ handleToggle: () => void }>()
 const route = useRoute()
-const selectedKeys = ref<string[]>([route.path])
+const selectedKeys = ref<string[]>([])
 
 // 处理菜单跳转
 const layoutStore = useLayoutStore()
@@ -98,6 +97,21 @@ const menuItems = [
     label: '权限管理'
   }
 ]
+
+// 监听路由名变化，自动激活对应的菜单项
+watch(
+  () => route.name,
+  (newName) => {
+    if (!newName) return
+    const matchedItem = menuItems.find((item) => String(newName) === item.keyName)
+    if (matchedItem) {
+      selectedKeys.value = [matchedItem.key]
+    } else {
+      selectedKeys.value = [route.path]
+    }
+  },
+  { immediate: true }
+)
 </script>
 <template>
   <div class="logo" />

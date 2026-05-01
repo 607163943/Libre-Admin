@@ -4,7 +4,8 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   UserOutlined,
-  LogoutOutlined
+  LogoutOutlined,
+  MessageOutlined
 } from '@ant-design/icons-vue'
 import { useLayoutStore } from '@/stores/modules/layout'
 import { useUserStore } from '@/stores/modules/user'
@@ -112,8 +113,17 @@ function onMenuClick({ key }: { key: string }) {
           <menu-fold-outlined v-else class="trigger" @click="handleToggle" />
         </div>
 
-        <!-- 右侧：用户头像 + 用户名下拉菜单 -->
+        <!-- 右侧：消息按钮 + 用户头像 + 用户名下拉菜单 -->
         <div class="flex items-center pr-6">
+          <!-- 消息按钮 -->
+          <div
+            class="flex items-center justify-center cursor-pointer hover:bg-gray-100 rounded-full w-9 h-9 mr-2 transition-colors duration-200"
+            @click="router.push({ name: 'MessageList' })"
+            title="消息列表"
+          >
+            <message-outlined class="text-lg text-gray-600" />
+          </div>
+
           <a-dropdown trigger="hover" placement="bottomRight">
             <div
               class="flex items-center gap-2 cursor-pointer select-none hover:bg-gray-100 rounded-lg px-3 py-1.5 transition-colors duration-200"
