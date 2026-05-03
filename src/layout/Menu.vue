@@ -5,7 +5,6 @@ import {
   BankOutlined,
   SwapOutlined,
   HomeOutlined,
-  TeamOutlined,
   MessageOutlined
 } from '@ant-design/icons-vue'
 import { ref, watch } from 'vue'
@@ -75,12 +74,6 @@ const menuItems = [
     keyName: 'User',
     icon: UserOutlined,
     label: '用户管理'
-  },
-  {
-    key: '/role',
-    keyName: 'Role',
-    icon: TeamOutlined,
-    label: '角色管理'
   }
 ]
 

@@ -71,8 +71,8 @@ defineExpose({
       <a-form-item label="发送对象" v-bind="validateInfos.target">
         <a-radio-group v-model:value="formState.target">
           <a-radio :value="0">全体</a-radio>
-          <a-radio :value="1">管理端</a-radio>
-          <a-radio :value="2">读者</a-radio>
+          <a-radio :value="1">读者</a-radio>
+          <a-radio :value="2">管理端</a-radio>
         </a-radio-group>
       </a-form-item>
     </a-form>
