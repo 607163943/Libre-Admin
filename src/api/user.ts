@@ -27,6 +27,11 @@ export const editUser = (data: UserDialogForm) => {
   return request.put<Result<void>>('/user', data)
 }
 
+// 修改用户状态
+export const changeUserState = (id: number, state: number) => {
+  return request.patch<Result<void>>(`/user/${id}/state/${state}`)
+}
+
 // 删除用户
 export const deleteUser = (id: number) => {
   return request.delete<Result<void>>(`/user/${id}`)

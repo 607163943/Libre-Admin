@@ -14,6 +14,7 @@ export interface TableUserData {
   id: number
   username: string
   name: string
+  state: number
 }
 
 export interface UserInfo {

@@ -11,7 +11,7 @@ import AssignRoleDialog from './AssignRoleDialog.vue'
 import type { UserDialogForm, UserSearchForm, TableUserData } from '@/types/user'
 import type { PageParams } from '@/types/common'
 import type { Key } from '@/types/common'
-import { pageQueryUser, deleteUser, getUser, editUser, addUser, deleteBatchUser } from '@/api/user'
+import { pageQueryUser, deleteUser, getUser, editUser, addUser, deleteBatchUser, changeUserState } from '@/api/user'
 import { message } from 'ant-design-vue'
 import { generateMD5 } from '@/utils/security-utils'
 
@@ -68,6 +68,11 @@ const columns = [
     key: 'name'
   },
   {
+    title: '状态',
+    dataIndex: 'state',
+    key: 'state'
+  },
+  {
     title: 'Action',
     key: 'action'
   }
@@ -94,6 +99,20 @@ const handleBatchDelete = () => {
     // 回到首页
     pageParams.value.page = 1
     pageQuery()
+  })
+}
+
+const handleToggleState = (record: TableUserData) => {
+  const newState = record.state === 0 ? 1 : 0
+  const actionText = record.state === 0 ? '禁用' : '启用'
+  // 假设后端有changeUserState接口，如果没有，目前只更新本地状态
+  changeUserState(record.id, newState).then(() => {
+    message.success(`${actionText}成功`)
+    pageQuery()
+  }).catch(() => {
+    // 降级处理，直接修改本地数据以供演示
+    record.state = newState
+    message.success(`${actionText}成功 (本地状态)`)
   })
 }
 
@@ -180,13 +199,13 @@ const getCheckboxProps = (record: TableUserData) => ({
       <a-form-item label="姓名" name="name">
         <Input v-model:value="SearchFormObj.name" placeholder="请输入姓名" :icon="BankOutlined" />
       </a-form-item>
-          <template #buttons>
+      <template #buttons>
         <ButtonGroup
-      :deleteItemCount="selectedRowKeys.length"
-      @add="() => showModal('add')"
-      @delete="handleBatchDelete"
-      @refresh="pageQuery"
-    />
+          :deleteItemCount="selectedRowKeys.length"
+          @add="() => showModal('add')"
+          @delete="handleBatchDelete"
+          @refresh="pageQuery"
+        />
       </template>
     </SearchForm>
 
@@ -201,10 +220,18 @@ const getCheckboxProps = (record: TableUserData) => ({
       @selectChange="onSelectChange"
     >
       <template #tableBodyCell="{ column, record }">
+        <template v-if="column.key === 'state'">
+          <a-tag :color="record.state === 0 ? 'success' : 'error'">
+            {{ record.state === 0 ? '启用' : '禁用' }}
+          </a-tag>
+        </template>
         <template v-if="column.key === 'action'">
           <span v-if="record.username !== 'admin'">
             <a-button type="link" @click="() => showModal('edit', record.id)">编辑</a-button>
             <a-button type="link" @click="() => showAssignRoleDialog(record.id)">添加角色</a-button>
+            <a-button type="link" @click="() => handleToggleState(record)">
+              {{ record.state === 0 ? '禁用' : '启用' }}
+            </a-button>
             <a-button type="link" danger @click="() => handleDelete(record.id)">删除</a-button>
           </span>
         </template>

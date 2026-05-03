@@ -2,6 +2,8 @@ export interface LendSearchForm {
   userId: number | undefined
   bookId: number | undefined
   state: number | undefined
+  lendStartTime?: string
+  lendEndTime?: string
 }
 
 export interface LendDialogForm {

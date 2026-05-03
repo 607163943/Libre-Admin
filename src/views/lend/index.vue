@@ -11,7 +11,6 @@ import { pageQueryLend, deleteLend, addLend, getLend, editLend, deleteBatchLend 
 import { message, type SelectProps } from 'ant-design-vue'
 import { getAllUser } from '@/api/user'
 import { getAllBook } from '@/api/book'
-import dayjs from 'dayjs'
 // 全局参数
 const userOptions = ref<SelectProps['options']>([])
 const bookOptions = ref<SelectProps['options']>([])
@@ -50,23 +49,42 @@ onMounted(() => {
 })
 
 // 搜索表单
+const lendTimeRange = ref<[string, string] | undefined>(undefined)
+
+const onRangeChange = (_value: any, dateString: [string, string]) => {
+  if (dateString && dateString[0] && dateString[1]) {
+    SearchFormObj.value.lendStartTime = dateString[0]
+    SearchFormObj.value.lendEndTime = dateString[1]
+  } else {
+    SearchFormObj.value.lendStartTime = undefined
+    SearchFormObj.value.lendEndTime = undefined
+  }
+}
+
 const SearchFormObj = ref<LendSearchForm>({
   userId: undefined,
   bookId: undefined,
-  state: undefined
+  state: undefined,
+  lendStartTime: undefined,
+  lendEndTime: undefined
 })
 // 正在使用的搜索表单
 const SearchFormObjUse = ref<LendSearchForm>({
   userId: undefined,
   bookId: undefined,
-  state: undefined
+  state: undefined,
+  lendStartTime: undefined,
+  lendEndTime: undefined
 })
 
 const handleReset = () => {
+  lendTimeRange.value = undefined
   SearchFormObj.value = {
     userId: undefined,
     bookId: undefined,
-    state: undefined
+    state: undefined,
+    lendStartTime: undefined,
+    lendEndTime: undefined
   }
 
   pageQuery()
@@ -244,13 +262,21 @@ const dialogRule: Record<string, Rule[]> = {
         >
         </a-select>
       </a-form-item>
-          <template #buttons>
+      <a-form-item label="借阅时间" name="lendTimeRange">
+        <a-range-picker
+          v-model:value="lendTimeRange"
+          value-format="YYYY-MM-DD HH:mm:ss"
+          show-time
+          @change="onRangeChange"
+        />
+      </a-form-item>
+      <template #buttons>
         <ButtonGroup
-      :deleteItemCount="selectedRowKeys.length"
-      @add="() => showModal('add')"
-      @delete="handleBatchDelete"
-      @refresh="pageQuery"
-    />
+          :deleteItemCount="selectedRowKeys.length"
+          @add="() => showModal('add')"
+          @delete="handleBatchDelete"
+          @refresh="pageQuery"
+        />
       </template>
     </SearchForm>
 
