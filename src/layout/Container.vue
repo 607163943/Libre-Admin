@@ -13,6 +13,7 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { logout } from '@/api/login'
+import { getUnreadCount } from '@/api/message'
 
 defineOptions({
   name: 'LayoutContainer'
@@ -31,6 +32,16 @@ const { setIsMobile } = layoutStore
 const userStore = useUserStore()
 const { userInfo } = storeToRefs(userStore)
 const router = useRouter()
+
+const unReadCount = ref(0)
+const loadData = () => {
+  getUnreadCount().then((res) => {
+    unReadCount.value = res.data.data
+  })
+}
+onMounted(() => {
+  loadData()
+})
 
 // 用户显示名称
 const displayName = computed(() => userInfo.value?.name ?? '用户')
@@ -115,14 +126,16 @@ function onMenuClick({ key }: { key: string }) {
 
         <!-- 右侧：消息按钮 + 用户头像 + 用户名下拉菜单 -->
         <div class="flex items-center pr-6">
-          <!-- 消息按钮 -->
-          <div
-            class="flex items-center justify-center cursor-pointer hover:bg-gray-100 rounded-full w-9 h-9 mr-2 transition-colors duration-200"
-            @click="router.push({ name: 'MessageList' })"
-            title="消息列表"
+          <a-button
+            type="text"
+            size="large"
+            class="mr-1 !pt-3"
+            @click="() => $router.push({ name: 'MessageList' })"
           >
-            <message-outlined class="text-lg text-gray-600" />
-          </div>
+            <a-badge :count="unReadCount" dot>
+              <message-outlined class="text-gray-600" style="font-size: 1.125rem" />
+            </a-badge>
+          </a-button>
 
           <a-dropdown trigger="hover" placement="bottomRight">
             <div

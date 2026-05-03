@@ -8,8 +8,6 @@ import Publisher from '@/views/publisher/index.vue'
 import Lend from '@/views/lend/index.vue'
 import Role from '@/views/role/index.vue'
 import Login from '@/views/login/index.vue'
-import Permission from '@/views/permission/index.vue'
-import Module from '@/views/module/index.vue'
 import Message from '@/views/message/index.vue'
 import MessageList from '@/views/message/message-list.vue'
 import MessageDetail from '@/views/message/message-detail.vue'
@@ -26,11 +24,6 @@ const router = createRouter({
           path: '',
           name: 'Home',
           component: Home
-        },
-        {
-          path: 'module',
-          name: 'Module',
-          component: Module
         },
         {
           path: 'user',
@@ -61,11 +54,6 @@ const router = createRouter({
           path: 'lend',
           name: 'Lend',
           component: Lend
-        },
-        {
-          path: 'permission',
-          name: 'Permission',
-          component: Permission
         },
         {
           path: 'message',

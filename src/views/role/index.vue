@@ -7,7 +7,6 @@ import PageTable from '@/components/PageTable.vue'
 import EditDialog from '@/components/EditDialog.vue'
 import ButtonGroup from '@/components/ButtonGroup.vue'
 import Input from '@/components/Input.vue'
-import AssignPermissionDialog from './AssignPermissionDialog.vue'
 import type { RoleSearchForm, TableRoleData, RoleDialogForm } from '@/types/role'
 import type { PageParams, Key } from '@/types/common'
 import { pageQueryRole, deleteRole, addRole, getRole, editRole, deleteBatchRole } from '@/api/role'
@@ -131,17 +130,6 @@ const dialogForm = ref<RoleDialogForm>({
 const dialogRule: Record<string, Rule[]> = {
   roleName: [{ required: true, message: '请输入角色名!' }]
 }
-
-// 授权对话框
-const assignPermissionOpen = ref(false)
-const assignRoleId = ref<number | undefined>(undefined)
-const assignRoleName = ref<string | undefined>(undefined)
-
-const showAssignPermission = (record: TableRoleData) => {
-  assignRoleId.value = record.id
-  assignRoleName.value = record.roleName
-  assignPermissionOpen.value = true
-}
 </script>
 <template>
   <div>
@@ -153,13 +141,13 @@ const showAssignPermission = (record: TableRoleData) => {
           :icon="BankOutlined"
         />
       </a-form-item>
-          <template #buttons>
+      <template #buttons>
         <ButtonGroup
-      :deleteItemCount="selectedRowKeys.length"
-      @add="() => showModal('add')"
-      @delete="handleBatchDelete"
-      @refresh="pageQuery"
-    />
+          :deleteItemCount="selectedRowKeys.length"
+          @add="() => showModal('add')"
+          @delete="handleBatchDelete"
+          @refresh="pageQuery"
+        />
       </template>
     </SearchForm>
 
@@ -174,12 +162,11 @@ const showAssignPermission = (record: TableRoleData) => {
     >
       <template #tableBodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
-            <span>
-              <a-button type="link" @click="() => showAssignPermission(record)">授权</a-button>
-              <a-button type="link" @click="() => showModal('edit', record.id)">编辑</a-button>
-              <a-button type="link" danger @click="() => handleDelete(record.id)">删除</a-button>
-            </span>
-          </template>
+          <span>
+            <a-button type="link" @click="() => showModal('edit', record.id)">编辑</a-button>
+            <a-button type="link" danger @click="() => handleDelete(record.id)">删除</a-button>
+          </span>
+        </template>
       </template>
     </PageTable>
 
@@ -197,13 +184,6 @@ const showAssignPermission = (record: TableRoleData) => {
         <Input v-model:value="dialogForm.roleName" placeholder="请输入角色名" />
       </a-form-item>
     </EditDialog>
-
-    <AssignPermissionDialog
-      v-model:open="assignPermissionOpen"
-      :role-id="assignRoleId"
-      :role-name="assignRoleName"
-      @success="pageQuery"
-    />
   </div>
 </template>
 <style></style>

@@ -4,10 +4,8 @@ import {
   UserOutlined,
   BankOutlined,
   SwapOutlined,
-  SafetyCertificateOutlined,
   HomeOutlined,
   TeamOutlined,
-  UnorderedListOutlined,
   MessageOutlined
 } from '@ant-design/icons-vue'
 import { ref, watch } from 'vue'
@@ -73,12 +71,6 @@ const menuItems = [
     label: '消息管理'
   },
   {
-    key: '/module',
-    keyName: 'Module',
-    icon: UnorderedListOutlined,
-    label: '模块管理'
-  },
-  {
     key: '/user',
     keyName: 'User',
     icon: UserOutlined,
@@ -89,12 +81,6 @@ const menuItems = [
     keyName: 'Role',
     icon: TeamOutlined,
     label: '角色管理'
-  },
-  {
-    key: '/permission',
-    keyName: 'Permission',
-    icon: SafetyCertificateOutlined,
-    label: '权限管理'
   }
 ]
 

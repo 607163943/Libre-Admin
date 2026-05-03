@@ -19,10 +19,8 @@ const routeNameMap: Record<string, string> = {
   Lend: '借阅管理',
   Message: '消息管理',
   MessageEdit: '消息编辑',
-  Module: '模块管理',
   User: '用户管理',
   Role: '角色管理',
-  Permission: '权限管理',
   MessageList: '我的消息',
   MessageDetail: '消息详情'
 }

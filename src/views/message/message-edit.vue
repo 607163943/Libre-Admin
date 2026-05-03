@@ -7,7 +7,8 @@ import Input from '@/components/Input.vue'
 import type { MessageDialogForm } from '@/types/message'
 import { getMessage, addMessage, editMessage } from '@/api/message'
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import { Editor, Toolbar } from '@wangeditor-next/editor-for-vue'
+import type { IDomEditor } from '@wangeditor/editor'
 
 const route = useRoute()
 const router = useRouter()
@@ -75,7 +76,7 @@ const handleCancel = () => {
 }
 
 // 编辑器实例，必须用 shallowRef
-const editorRef = shallowRef<any>(null)
+const editorRef = shallowRef<IDomEditor | null>(null)
 
 const toolbarConfig = {}
 const editorConfig = { placeholder: '请输入内容...' }
@@ -87,7 +88,7 @@ onBeforeUnmount(() => {
   editor.destroy()
 })
 
-const handleCreated = (editor: any) => {
+const handleCreated = (editor: IDomEditor) => {
   editorRef.value = editor // 记录 editor 实例，重要！
 }
 </script>
@@ -119,12 +120,12 @@ const handleCreated = (editor: any) => {
           <div class="border border-gray-200 rounded-md w-full relative z-0">
             <Toolbar
               class="border-b border-gray-200"
-              :editor="editorRef"
+              :editor="editorRef!"
               :defaultConfig="toolbarConfig"
               mode="default"
             />
             <Editor
-              style="height: 400px; overflow-y: hidden;"
+              style="height: 400px; overflow-y: hidden"
               v-model="dialogForm.content"
               :defaultConfig="editorConfig"
               mode="default"
