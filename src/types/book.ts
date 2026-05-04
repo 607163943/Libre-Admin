@@ -4,6 +4,8 @@ export interface BookSearchForm {
   publisherId: number | undefined
   isbn: string
   language: string
+  publishStartTime?: string
+  publishEndTime?: string
 }
 
 export interface BookDialogForm {

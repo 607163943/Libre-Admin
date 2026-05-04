@@ -38,12 +38,26 @@ onMounted(() => {
 })
 
 // 搜索表单
+const publishTimeRange = ref<[string, string] | undefined>(undefined)
+
+const onRangeChange = (_value: any, dateString: [string, string]) => {
+  if (dateString && dateString[0] && dateString[1]) {
+    SearchFormObj.value.publishStartTime = dateString[0]
+    SearchFormObj.value.publishEndTime = dateString[1]
+  } else {
+    SearchFormObj.value.publishStartTime = undefined
+    SearchFormObj.value.publishEndTime = undefined
+  }
+}
+
 const SearchFormObj = ref<BookSearchForm>({
   bookName: '',
   authorId: undefined,
   publisherId: undefined,
   isbn: '',
-  language: ''
+  language: '',
+  publishStartTime: undefined,
+  publishEndTime: undefined
 })
 // 正在使用的搜索表单
 const SearchFormObjUse = ref<BookSearchForm>({
@@ -51,16 +65,21 @@ const SearchFormObjUse = ref<BookSearchForm>({
   authorId: undefined,
   publisherId: undefined,
   isbn: '',
-  language: ''
+  language: '',
+  publishStartTime: undefined,
+  publishEndTime: undefined
 })
 
 const handleReset = () => {
+  publishTimeRange.value = undefined
   SearchFormObj.value = {
     bookName: '',
     authorId: undefined,
     publisherId: undefined,
     isbn: '',
-    language: ''
+    language: '',
+    publishStartTime: undefined,
+    publishEndTime: undefined
   }
 
   pageQuery()
@@ -261,6 +280,13 @@ const dialogRule: Record<string, Rule[]> = {
           v-model:value="SearchFormObj.language"
           placeholder="请输入语言"
           :icon="FontColorsOutlined"
+        />
+      </a-form-item>
+      <a-form-item label="出版日期" name="publishTimeRange">
+        <a-range-picker
+          v-model:value="publishTimeRange"
+          value-format="YYYY-MM-DD"
+          @change="onRangeChange"
         />
       </a-form-item>
       <template #buttons>
