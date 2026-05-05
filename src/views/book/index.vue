@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { BookOutlined, FontColorsOutlined, GlobalOutlined } from '@ant-design/icons-vue'
+import { BookOutlined, FontColorsOutlined, GlobalOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { Rule } from 'ant-design-vue/es/form'
+import type { UploadChangeParam } from 'ant-design-vue'
+import { useUserStore } from '@/stores/modules/user'
 import SearchForm from '@/components/SearchForm.vue'
 import PageTable from '@/components/PageTable.vue'
 import EditDialog from '@/components/EditDialog.vue'
@@ -40,7 +42,7 @@ onMounted(() => {
 // 搜索表单
 const publishTimeRange = ref<[string, string] | undefined>(undefined)
 
-const onRangeChange = (_value: any, dateString: [string, string]) => {
+const onRangeChange = (_value: object, dateString: [string, string]) => {
   if (dateString && dateString[0] && dateString[1]) {
     SearchFormObj.value.publishStartTime = dateString[0]
     SearchFormObj.value.publishEndTime = dateString[1]
@@ -233,6 +235,26 @@ const dialogForm = ref<BookDialogForm>({
   number: 0
 })
 
+const userStore = useUserStore()
+const uploadHeaders = ref<Record<string, string>>({})
+if (userStore.userInfo?.tokenName && userStore.userInfo?.tokenValue) {
+  uploadHeaders.value[userStore.userInfo.tokenName] = userStore.userInfo.tokenValue
+}
+
+const handleUploadChange = (info: UploadChangeParam) => {
+  if (info.file.status === 'done') {
+    const res = info.file.response
+    if (res.code === 1 || res.code === 200) {
+      dialogForm.value.coverUrl = res.data?.fileUrl || res.data || res.fileUrl
+      message.success('封面上传成功')
+    } else {
+      message.error(res.msg || '封面上传失败')
+    }
+  } else if (info.file.status === 'error') {
+    message.error('封面上传失败')
+  }
+}
+
 const dialogRule: Record<string, Rule[]> = {
   bookName: [{ required: true, message: '请输入书名!' }],
   authorId: [{ required: true, message: '请输入作者ID!' }],
@@ -359,9 +381,28 @@ const dialogRule: Record<string, Rule[]> = {
           :icon="FontColorsOutlined"
         />
       </a-form-item>
-      <!-- <a-form-item label="封面" name="coverUrl">
-      <a-input v-model:value="dialogForm.coverUrl" />
-    </a-form-item> -->
+      <a-form-item label="封面" name="coverUrl">
+        <a-upload
+          name="file"
+          list-type="picture-card"
+          class="avatar-uploader"
+          :show-upload-list="false"
+          action="/api/admin/upload"
+          :headers="uploadHeaders"
+          @change="handleUploadChange"
+        >
+          <img
+            v-if="dialogForm.coverUrl"
+            :src="dialogForm.coverUrl"
+            alt="cover"
+            class="w-[104px] h-[104px] object-cover"
+          />
+          <div v-else>
+            <plus-outlined />
+            <div class="ant-upload-text mt-2 text-gray-500">上传封面</div>
+          </div>
+        </a-upload>
+      </a-form-item>
       <a-form-item label="简介" name="introduction">
         <a-textarea v-model:value="dialogForm.introduction" :rows="4" placeholder="请输入简介" />
       </a-form-item>
