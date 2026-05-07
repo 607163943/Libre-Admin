@@ -15,11 +15,7 @@ import Footer from './Footer.vue'
       <Breadcrumb />
     </template>
     <template #content>
-      <router-view v-slot="{ Component }">
-        <transition>
-          <component :is="Component" />
-        </transition>
-      </router-view>
+      <router-view />
     </template>
     <template #footer>
       <Footer />
@@ -27,31 +23,4 @@ import Footer from './Footer.vue'
   </Container>
 </template>
 
-<style>
-.page-fade-enter-active {
-  animation: pageFadeIn 0.35s ease-out;
-}
-.page-fade-leave-active {
-  animation: pageFadeOut 0.2s ease-in;
-}
-@keyframes pageFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes pageFadeOut {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-}
-</style>
+<style></style>

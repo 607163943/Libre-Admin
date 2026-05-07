@@ -2,7 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
-import { login } from '@/api/login'
+import { login, getCaptcha } from '@/api/login'
 import type { LoginForm } from '@/types/login'
 import { useUserStore } from '@/stores/modules/user'
 import { useRouter } from 'vue-router'
@@ -13,8 +13,23 @@ import { generateMD5 } from '@/utils/security-utils'
 // ─── 表单状态 ───────────────────────────────────────────────
 const form = ref<LoginForm>({
   username: '',
-  password: ''
+  password: '',
+  captchaKey: '',
+  captchaCode: ''
 })
+
+const captchaImg = ref('')
+
+const refreshCaptcha = async () => {
+  getCaptcha({ captchaKey: form.value.captchaKey || '' })
+    .then((res) => {
+      form.value.captchaKey = res.data.data.captchaKey
+      captchaImg.value = res.data.data.captchaImgBase64
+    })
+    .catch((err) => {
+      console.error('获取验证码失败', err)
+    })
+}
 
 const passwordVisible = ref(false)
 const loading = ref(false)
@@ -27,6 +42,7 @@ const checkMobile = () => {
 onMounted(() => {
   checkMobile()
   window.addEventListener('resize', checkMobile)
+  refreshCaptcha()
 })
 onUnmounted(() => {
   window.removeEventListener('resize', checkMobile)
@@ -35,14 +51,15 @@ onUnmounted(() => {
 // ─── 登录处理 ───────────────────────────────────────────────
 const formRule: Record<string, Rule[]> = {
   username: [{ required: true, message: '请输入用户名!' }],
-  password: [{ required: true, message: '请输入密码!' }]
+  password: [{ required: true, message: '请输入密码!' }],
+  captchaCode: [{ required: true, message: '请输入验证码!' }]
 }
 
 const userStore = useUserStore()
 const router = useRouter()
 const handleLogin = async () => {
-  if (!form.value.username || !form.value.password) {
-    message.warning('请填写密码')
+  if (!form.value.username || !form.value.password || !form.value.captchaCode) {
+    message.warning('请填写完整登录信息')
     return
   }
   loading.value = true
@@ -158,6 +175,42 @@ const handleLogin = async () => {
               <EyeInvisibleOutlined v-else />
             </template>
           </a-input-password>
+        </a-form-item>
+
+        <!-- 验证码 -->
+        <a-form-item label="验证码" name="captchaCode">
+          <div class="flex items-start gap-4">
+            <a-input
+              v-model:value="form.captchaCode"
+              placeholder="请输入验证码"
+              size="large"
+              class="rounded-lg flex-1"
+              allow-clear
+            />
+            <div class="flex flex-col items-center gap-1">
+              <div
+                class="w-[120px] h-[40px] flex-shrink-0 cursor-pointer overflow-hidden rounded-lg border border-gray-200"
+                title="点击刷新验证码"
+                @click="refreshCaptcha"
+              >
+                <img
+                  v-if="captchaImg"
+                  :src="captchaImg"
+                  alt="验证码"
+                  class="w-full h-full object-cover"
+                />
+                <div
+                  v-else
+                  class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 text-sm"
+                >
+                  加载中...
+                </div>
+              </div>
+              <span class="text-xs text-gray-400 cursor-pointer hover:text-blue-500 transition-colors" @click="refreshCaptcha">
+                看不清？换一张
+              </span>
+            </div>
+          </div>
         </a-form-item>
         <!-- 登录按钮 -->
         <a-form-item class="mt-12">
