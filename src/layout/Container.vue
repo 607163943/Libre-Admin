@@ -81,7 +81,9 @@ async function handleLogout() {
 
 // Dropdown 菜单项点击
 function onMenuClick({ key }: { key: string }) {
-  if (key === 'logout') {
+  if (key === 'profile') {
+    router.push({ name: 'Profile' })
+  } else if (key === 'logout') {
     handleLogout()
   }
 }
@@ -152,6 +154,10 @@ function onMenuClick({ key }: { key: string }) {
             </div>
             <template #overlay>
               <a-menu @click="onMenuClick">
+                <a-menu-item key="profile" class="flex items-center gap-2">
+                  <user-outlined />
+                  <span>个人中心</span>
+                </a-menu-item>
                 <a-menu-item
                   key="logout"
                   class="flex items-center gap-2 !text-red-500 hover:!bg-red-50"

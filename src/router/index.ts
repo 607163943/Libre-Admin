@@ -6,6 +6,7 @@ import Book from '@/views/book/index.vue'
 import Author from '@/views/author/index.vue'
 import Publisher from '@/views/publisher/index.vue'
 import Lend from '@/views/lend/index.vue'
+import Profile from '@/views/profile/index.vue'
 import Login from '@/views/login/index.vue'
 import Message from '@/views/message/index.vue'
 import MessageList from '@/views/message/message-list.vue'
@@ -68,6 +69,11 @@ const router = createRouter({
           path: 'message/detail/:id',
           name: 'MessageDetail',
           component: MessageDetail
+        },
+        {
+          path: 'profile',
+          name: 'Profile',
+          component: Profile
         }
       ]
     },

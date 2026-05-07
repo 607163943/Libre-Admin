@@ -1,5 +1,11 @@
 import request from '@/utils/request'
-import type { UserSearchForm, TableUserData, UserDialogForm } from '@/types/user'
+import type {
+  UserSearchForm,
+  TableUserData,
+  UserDialogForm,
+  UserProfileInfo,
+  UserPasswordSubmit
+} from '@/types/user'
 import type { Result, PageResult } from '@/types/common'
 
 // 分页查询用户
@@ -40,4 +46,19 @@ export const deleteUser = (id: number) => {
 // 批量删除用户
 export const deleteBatchUser = (ids: string) => {
   return request.delete<Result<void>>(`/user`, { params: { ids: ids } })
+}
+
+// 获取用户信息
+export const getUserProfile = () => {
+  return request.get<Result<UserProfileInfo>>('/user/profile')
+}
+
+// 更新用户信息
+export const updateUserProfile = (data: UserProfileInfo) => {
+  return request.put<Result<void>>('/user/profile', data)
+}
+
+// 修改密码
+export const updateUserPassword = (data: UserPasswordSubmit) => {
+  return request.patch<Result<void>>('/user/profile/password', data)
 }

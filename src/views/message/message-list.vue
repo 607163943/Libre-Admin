@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { ExclamationCircleOutlined, NotificationOutlined } from '@ant-design/icons-vue'
 import type { MessageItem, SearchMessageForm } from '@/types/message'
-import { getMessageList } from '@/api/message'
+import { getMessageList, getUnreadCount } from '@/api/message'
 
 // 状态变量
 // 搜索
@@ -14,6 +14,7 @@ const searchForm = ref<SearchMessageForm>({
 const currentPage = ref(1)
 const total = ref(0)
 const messageList = ref<MessageItem[]>([])
+const unreadCount = ref(0)
 
 // --- 业务逻辑 ---
 const handleSearch = () => {
@@ -23,15 +24,23 @@ const handleSearch = () => {
   })
 }
 
+const handleUnreadCount = () => {
+  getUnreadCount().then((res) => {
+    unreadCount.value = res.data.data
+  })
+}
+
 const handleTabChange = (key: number) => {
   searchForm.value.type = key
   searchForm.value.page = 1
   handleSearch()
+  handleUnreadCount()
 }
 
 // 初始化
 onMounted(() => {
   handleSearch()
+  handleUnreadCount()
 })
 
 /**
@@ -64,7 +73,7 @@ const handleMarkAllRead = async () => {
           >
             <a-tabs v-model:activeKey="searchForm.type" class="mb-4" @change="handleTabChange">
               <a-tab-pane :key="0" tab="全部消息" />
-              <a-tab-pane :key="1" tab="未读 (1)" />
+              <a-tab-pane :key="1" :tab="unreadCount === 0 ? '未读' : `未读 (${unreadCount})`" />
               <a-tab-pane :key="2" tab="已读" />
               <template #rightExtra>
                 <a-button type="link" size="small" @click="handleMarkAllRead">
@@ -88,7 +97,10 @@ const handleMarkAllRead = async () => {
               >
                 <!-- 图标 -->
                 <div class="mr-4 mt-1">
-                  <ExclamationCircleOutlined v-if="item.type === 1" class="text-xl text-orange-500" />
+                  <ExclamationCircleOutlined
+                    v-if="item.type === 1"
+                    class="text-xl text-orange-500"
+                  />
                   <NotificationOutlined v-else class="text-xl text-blue-500" />
                 </div>
 
@@ -96,7 +108,10 @@ const handleMarkAllRead = async () => {
                 <div class="flex-1">
                   <div class="flex justify-between mb-1">
                     <span class="font-semibold text-gray-800">
-                      <span v-if="item.isRead === 0" class="inline-block w-2 h-2 rounded-full bg-red-500 mr-2 align-middle"></span>
+                      <span
+                        v-if="item.isRead === 0"
+                        class="inline-block w-2 h-2 rounded-full bg-red-500 mr-2 align-middle"
+                      ></span>
                       {{ item.title }}
                     </span>
                     <span class="text-xs text-gray-400">{{ item.createTime }}</span>

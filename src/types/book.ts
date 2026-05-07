@@ -13,6 +13,7 @@ export interface BookDialogForm {
   bookName: string
   authorId: number | undefined
   publisherId: number | undefined
+  fileId: number | undefined
   coverUrl: string
   isbn: string
   introduction: string

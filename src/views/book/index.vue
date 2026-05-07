@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { BookOutlined, FontColorsOutlined, GlobalOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import {
+  BookOutlined,
+  FontColorsOutlined,
+  GlobalOutlined,
+  PlusOutlined
+} from '@ant-design/icons-vue'
 import type { Rule } from 'ant-design-vue/es/form'
 import type { UploadChangeParam } from 'ant-design-vue'
 import { useUserStore } from '@/stores/modules/user'
@@ -228,6 +233,7 @@ const dialogForm = ref<BookDialogForm>({
   publisherId: undefined,
   isbn: '',
   language: '',
+  fileId: undefined,
   coverUrl: '',
   introduction: '',
   publishDate: undefined,
@@ -245,7 +251,8 @@ const handleUploadChange = (info: UploadChangeParam) => {
   if (info.file.status === 'done') {
     const res = info.file.response
     if (res.code === 1 || res.code === 200) {
-      dialogForm.value.coverUrl = res.data?.fileUrl || res.data || res.fileUrl
+      dialogForm.value.coverUrl = res.data?.fileUrl
+      dialogForm.value.fileId = res.data?.fileId
       message.success('封面上传成功')
     } else {
       message.error(res.msg || '封面上传失败')

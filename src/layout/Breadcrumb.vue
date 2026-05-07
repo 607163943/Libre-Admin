@@ -21,7 +21,8 @@ const routeNameMap: Record<string, string> = {
   MessageEdit: '消息编辑',
   User: '用户管理',
   MessageList: '我的消息',
-  MessageDetail: '消息详情'
+  MessageDetail: '消息详情',
+  Profile: '个人中心'
 }
 
 // 路由父子关系映射（用于构建多级面包屑）
