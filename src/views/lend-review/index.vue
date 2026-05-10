@@ -28,9 +28,10 @@ import { getAllBook } from '@/api/book'
 
 // 搜索选项
 const stateOptions = ref<SelectProps['options']>([
-  { value: 0, label: '待审核' },
-  { value: 1, label: '通过' },
-  { value: 2, label: '驳回' }
+  { value: 0, label: '待提交' },
+  { value: 1, label: '待审核' },
+  { value: 2, label: '通过' },
+  { value: 3, label: '驳回' }
 ])
 
 const typeOptions = ref<SelectProps['options']>([
@@ -59,7 +60,7 @@ onMounted(() => {
 // 搜索表单
 const applyTimeRange = ref<[string, string] | undefined>(undefined)
 
-const onRangeChange = (_value: any, dateString: [string, string]) => {
+const onRangeChange = (_value: object, dateString: [string, string]) => {
   if (dateString && dateString[0] && dateString[1]) {
     SearchFormObj.value.applyStartTime = dateString[0]
     SearchFormObj.value.applyEndTime = dateString[1]
@@ -149,6 +150,11 @@ const columns = [
     title: '申请时间',
     dataIndex: 'applyTime',
     key: 'applyTime'
+  },
+  {
+    title: '操作人',
+    dataIndex: 'operatorName',
+    key: 'operatorName'
   },
   {
     title: '操作',
@@ -324,13 +330,14 @@ const dialogRule: Record<string, Rule[]> = {
         </template>
         <template v-if="column.key === 'state'">
           <span>
-            <a-badge status="processing" text="待审核" v-if="record.state === 0" />
-            <a-badge status="success" text="通过" v-if="record.state === 1" />
-            <a-badge status="error" text="驳回" v-if="record.state === 2" />
+            <a-badge status="default" text="待提交" v-if="record.state === 0" />
+            <a-badge status="processing" text="待审核" v-if="record.state === 1" />
+            <a-badge status="success" text="通过" v-if="record.state === 2" />
+            <a-badge status="error" text="驳回" v-if="record.state === 3" />
           </span>
         </template>
         <template v-if="column.key === 'action'">
-          <span v-if="record.state === 0">
+          <span v-if="record.state === 1">
             <a-button type="link" @click="() => showReviewDialog(record)">处理</a-button>
           </span>
           <span v-else class="text-gray-400 pl-4"> 已处理 </span>

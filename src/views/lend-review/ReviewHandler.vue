@@ -57,7 +57,7 @@ const handleReview = (state: number) => {
         title="确定驳回该申请吗？"
         ok-text="确定"
         cancel-text="取消"
-        @confirm="() => handleReview(2)"
+        @confirm="() => handleReview(3)"
       >
         <a-button danger :loading="loading">驳回</a-button>
       </a-popconfirm>
@@ -65,7 +65,7 @@ const handleReview = (state: number) => {
         title="确定通过该申请吗？"
         ok-text="确定"
         cancel-text="取消"
-        @confirm="() => handleReview(1)"
+        @confirm="() => handleReview(2)"
       >
         <a-button type="primary" :loading="loading">通过</a-button>
       </a-popconfirm>
