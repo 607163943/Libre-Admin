@@ -62,7 +62,6 @@ const SearchFormObj = ref<BookSearchForm>({
   authorId: undefined,
   publisherId: undefined,
   isbn: '',
-  language: '',
   publishStartTime: undefined,
   publishEndTime: undefined
 })
@@ -72,7 +71,6 @@ const SearchFormObjUse = ref<BookSearchForm>({
   authorId: undefined,
   publisherId: undefined,
   isbn: '',
-  language: '',
   publishStartTime: undefined,
   publishEndTime: undefined
 })
@@ -84,7 +82,6 @@ const handleReset = () => {
     authorId: undefined,
     publisherId: undefined,
     isbn: '',
-    language: '',
     publishStartTime: undefined,
     publishEndTime: undefined
   }
@@ -207,20 +204,39 @@ const showModal = (openMode: string, id?: number) => {
   if (mode.value === 'edit' && id) {
     getBook(id).then((res) => {
       dialogForm.value = res.data.data
+      dialogForm.value.price = convertToDollars(dialogForm.value.price)
     })
   }
   open.value = true
 }
 
+// 将输入的价格转换为分
+const convertToCents = (price: number) => {
+  return Math.round(price * 100)
+}
+
+// 将价格从分转换为元
+const convertToDollars = (price: number) => {
+  return (price * 1.0) / 100
+}
+
 const handleAdd = () => {
-  addBook(dialogForm.value).then(() => {
+  const tempDialogForm: BookDialogForm = {
+    ...dialogForm.value,
+    price: convertToCents(dialogForm.value.price)
+  }
+  addBook(tempDialogForm).then(() => {
     message.success('添加成功')
     pageQuery()
   })
 }
 
 const handleEdit = () => {
-  editBook(dialogForm.value).then(() => {
+  const tempDialogForm: BookDialogForm = {
+    ...dialogForm.value,
+    price: convertToCents(dialogForm.value.price)
+  }
+  editBook(tempDialogForm).then(() => {
     message.success('编辑成功')
     pageQuery()
   })
@@ -303,13 +319,6 @@ const dialogRule: Record<string, Rule[]> = {
       </a-form-item>
       <a-form-item label="ISBN" name="isbn">
         <Input v-model:value="SearchFormObj.isbn" placeholder="请输入ISBN" :icon="GlobalOutlined" />
-      </a-form-item>
-      <a-form-item label="语言" name="language">
-        <Input
-          v-model:value="SearchFormObj.language"
-          placeholder="请输入语言"
-          :icon="FontColorsOutlined"
-        />
       </a-form-item>
       <a-form-item label="出版日期" name="publishTimeRange">
         <a-range-picker

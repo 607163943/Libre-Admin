@@ -13,7 +13,6 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { logout } from '@/api/login'
-import { getUnreadCount } from '@/api/message'
 
 defineOptions({
   name: 'LayoutContainer'
@@ -26,18 +25,15 @@ const drawerOpen = ref<boolean>(false)
 const windowWidth = ref<number>(typeof window !== 'undefined' ? window.innerWidth : 1280)
 
 const layoutStore = useLayoutStore()
-const { isMobile } = storeToRefs(layoutStore)
-const { setIsMobile } = layoutStore
+const { isMobile, unReadCount } = storeToRefs(layoutStore)
+const { setIsMobile, getNewUnReadCount } = layoutStore
 
 const userStore = useUserStore()
 const { userInfo } = storeToRefs(userStore)
 const router = useRouter()
 
-const unReadCount = ref(0)
 const loadData = () => {
-  getUnreadCount().then((res) => {
-    unReadCount.value = res.data.data
-  })
+  getNewUnReadCount()
 }
 onMounted(() => {
   loadData()

@@ -28,7 +28,6 @@ import { getAllBook } from '@/api/book'
 
 // 搜索选项
 const stateOptions = ref<SelectProps['options']>([
-  { value: 0, label: '待提交' },
   { value: 1, label: '待审核' },
   { value: 2, label: '通过' },
   { value: 3, label: '驳回' }
@@ -205,7 +204,7 @@ const showModal = (openMode: string, id?: number) => {
       bookId: undefined,
       applyType: 1,
       lendDays: 7,
-      state: 0,
+      state: 1,
       applyTime: ''
     }
   }
@@ -248,7 +247,7 @@ const dialogForm = ref<LendReviewDialogForm>({
   bookId: undefined,
   applyType: 1,
   lendDays: 7,
-  state: 0,
+  state: 1,
   applyTime: ''
 })
 

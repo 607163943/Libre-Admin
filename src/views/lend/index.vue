@@ -357,7 +357,7 @@ const dialogRule: Record<string, Rule[]> = {
           v-model:value="dialogForm.lendTime"
           show-time
           placeholder="请指定借阅时间"
-          :value-format="'yyyy-MM-dd HH:mm:ss'"
+          :value-format="'YYYY-MM-DD HH:mm:ss'"
         />
       </a-form-item>
       <a-form-item
@@ -369,7 +369,7 @@ const dialogRule: Record<string, Rule[]> = {
           v-model:value="dialogForm.returnTime"
           show-time
           placeholder="请指定归还时间"
-          :value-format="'yyyy-MM-dd HH:mm:ss'"
+          :value-format="'YYYY-MM-DD HH:mm:ss'"
         />
       </a-form-item>
     </EditDialog>

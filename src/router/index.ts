@@ -12,6 +12,7 @@ import Login from '@/views/login/index.vue'
 import Message from '@/views/message/index.vue'
 import MessageList from '@/views/message/message-list.vue'
 import MessageDetail from '@/views/message/message-detail.vue'
+import { useLayoutStore } from '@/stores/modules/layout' // 确保路径正确
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -89,6 +90,16 @@ const router = createRouter({
       component: Login
     }
   ]
+})
+
+/**
+ * 全局后置钩子
+ * 路由跳转完成后，自动触发获取未读消息
+ */
+router.afterEach(() => {
+  // 注意：在组件外部使用 Pinia Store，需要确保在路由实例中使用
+  const layoutStore = useLayoutStore()
+  layoutStore.getNewUnReadCount()
 })
 
 export default router

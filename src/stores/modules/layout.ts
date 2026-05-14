@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import { getUnreadCount } from '@/api/message'
 
 export const useLayoutStore = defineStore('layout', () => {
   const isMobile = ref(false)
@@ -8,8 +9,18 @@ export const useLayoutStore = defineStore('layout', () => {
     isMobile.value = value
   }
 
+  const unReadCount = ref(0)
+
+  const getNewUnReadCount = () => {
+    getUnreadCount().then((res) => {
+      unReadCount.value = res.data.data
+    })
+  }
+
   return {
     isMobile,
-    setIsMobile
+    setIsMobile,
+    unReadCount,
+    getNewUnReadCount
   }
 })

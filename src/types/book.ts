@@ -3,7 +3,6 @@ export interface BookSearchForm {
   authorId: number | undefined
   publisherId: number | undefined
   isbn: string
-  language: string
   publishStartTime?: string
   publishEndTime?: string
 }
