@@ -4,12 +4,9 @@ import { ArrowLeftOutlined, NotificationOutlined } from '@ant-design/icons-vue'
 import type { MessageDetail } from '@/types/message'
 import { useRoute } from 'vue-router'
 import { getMessageDetail } from '@/api/message'
-import { useLayoutStore } from '@/stores/modules/layout'
 
 // 响应式数据
 const route = useRoute()
-const layoutStore = useLayoutStore()
-const { getNewUnReadCount } = layoutStore
 
 // 响应式数据
 const messageData = ref<MessageDetail>({
@@ -29,7 +26,6 @@ const handleGetMessageDetail = async (id: number) => {
 // 初始化请求数据
 onMounted(() => {
   handleGetMessageDetail(Number(route.params.id))
-  getNewUnReadCount()
 })
 </script>
 

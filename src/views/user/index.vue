@@ -11,7 +11,15 @@ import AssignRoleDialog from './AssignRoleDialog.vue'
 import type { UserDialogForm, UserSearchForm, TableUserData } from '@/types/user'
 import type { PageParams } from '@/types/common'
 import type { Key } from '@/types/common'
-import { pageQueryUser, deleteUser, getUser, editUser, addUser, deleteBatchUser, changeUserState } from '@/api/user'
+import {
+  pageQueryUser,
+  deleteUser,
+  getUser,
+  editUser,
+  addUser,
+  deleteBatchUser,
+  changeUserState
+} from '@/api/user'
 import { message } from 'ant-design-vue'
 import { generateMD5 } from '@/utils/security-utils'
 
@@ -106,14 +114,16 @@ const handleToggleState = (record: TableUserData) => {
   const newState = record.state === 0 ? 1 : 0
   const actionText = record.state === 0 ? '禁用' : '启用'
   // 假设后端有changeUserState接口，如果没有，目前只更新本地状态
-  changeUserState(record.id, newState).then(() => {
-    message.success(`${actionText}成功`)
-    pageQuery()
-  }).catch(() => {
-    // 降级处理，直接修改本地数据以供演示
-    record.state = newState
-    message.success(`${actionText}成功 (本地状态)`)
-  })
+  changeUserState(record.id, newState)
+    .then(() => {
+      message.success(`${actionText}成功`)
+      pageQuery()
+    })
+    .catch(() => {
+      // 降级处理，直接修改本地数据以供演示
+      record.state = newState
+      message.success(`${actionText}成功 (本地状态)`)
+    })
 }
 
 const tableData = ref<TableUserData[]>([])
@@ -174,12 +184,36 @@ const dialogForm = ref<UserDialogForm>({
   id: '',
   username: '',
   password: '',
-  name: ''
+  name: '',
+  email: '',
+  phone: ''
 })
 
 const dialogRule: Record<string, Rule[]> = {
   username: [{ required: true, message: '请输入用户名!' }],
-  password: [{ required: true, message: '请输入密码!' }]
+  password: [{ required: true, message: '请输入密码!' }],
+  email: [
+    {
+      validator: async (_rule: object, value: string) => {
+        if (!value) return Promise.resolve()
+        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) {
+          return Promise.reject('请输入正确的邮箱格式!')
+        }
+        return Promise.resolve()
+      }
+    }
+  ],
+  phone: [
+    {
+      validator: async (_rule: object, value: string) => {
+        if (!value) return Promise.resolve()
+        if (!/^1[3-9]\d{9}$/.test(value)) {
+          return Promise.reject('请输入正确的手机号码!')
+        }
+        return Promise.resolve()
+      }
+    }
+  ]
 }
 
 const getCheckboxProps = (record: TableUserData) => ({
@@ -256,6 +290,12 @@ const getCheckboxProps = (record: TableUserData) => ({
       </a-form-item>
       <a-form-item label="姓名" name="name">
         <Input v-model:value="dialogForm.name" placeholder="请输入姓名" />
+      </a-form-item>
+      <a-form-item label="邮箱" name="email">
+        <Input v-model:value="dialogForm.email" placeholder="请输入邮箱(选填)" />
+      </a-form-item>
+      <a-form-item label="电话" name="phone">
+        <Input v-model:value="dialogForm.phone" placeholder="请输入电话(选填)" />
       </a-form-item>
     </EditDialog>
 

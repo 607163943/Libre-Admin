@@ -12,7 +12,8 @@ import Login from '@/views/login/index.vue'
 import Message from '@/views/message/index.vue'
 import MessageList from '@/views/message/message-list.vue'
 import MessageDetail from '@/views/message/message-detail.vue'
-import { useLayoutStore } from '@/stores/modules/layout' // 确保路径正确
+import { useLayoutStore } from '@/stores/modules/layout'
+import { useUserStore } from '@/stores/modules/user'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -93,13 +94,36 @@ const router = createRouter({
 })
 
 /**
+ * 全局前置守卫
+ * 所有页面都需要登录
+ */
+router.beforeEach((to) => {
+  const userStore = useUserStore()
+  if (userStore.userInfo && userStore.userInfo.tokenValue) {
+    return true
+  }
+  // 注意：这里要防止无限循环跳转，所以通常要判断一下 to.name
+  if (to.name !== 'Login') {
+    return { name: 'Login' }
+  }
+})
+
+/**
  * 全局后置钩子
  * 路由跳转完成后，自动触发获取未读消息
  */
 router.afterEach(() => {
-  // 注意：在组件外部使用 Pinia Store，需要确保在路由实例中使用
-  const layoutStore = useLayoutStore()
-  layoutStore.getNewUnReadCount()
+  try {
+    // 注意：在组件外部使用 Pinia Store，需要确保在路由实例中使用
+    const userStore = useUserStore()
+    // 有令牌才请求
+    if (userStore.userInfo && userStore.userInfo.tokenValue) {
+      const layoutStore = useLayoutStore()
+      layoutStore.getNewUnReadCount()
+    }
+  } catch (error) {
+    console.error(error)
+  }
 })
 
 export default router

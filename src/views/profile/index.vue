@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue'
 import { UserOutlined, LockOutlined, LogoutOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
-import type { UploadChangeParam, UploadProps } from 'ant-design-vue'
 import type { UserProfileInfo, UserPasswordForm, UserPasswordSubmit } from '@/types/user'
 import type { Rule } from 'ant-design-vue/es/form'
 import { useUserStore } from '@/stores/modules/user'
@@ -50,31 +49,6 @@ const handleUserInfo = async () => {
 onMounted(() => {
   handleUserInfo()
 })
-
-// 头像上传前的校验
-const beforeUpload: UploadProps['beforeUpload'] = (file) => {
-  const isJpgOrPng =
-    file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif'
-  if (!isJpgOrPng) {
-    message.error('只能上传 JPG/PNG/GIF 格式的图片!')
-  }
-  const isLt800K = file.size / 1024 < 800
-  if (!isLt800K) {
-    message.error('图片大小不能超过 800KB!')
-  }
-  return isJpgOrPng && isLt800K
-}
-
-// 处理头像上传变更
-const handleAvatarChange = (info: UploadChangeParam) => {
-  if (info.file.status === 'uploading') {
-    return
-  }
-  if (info.file.status === 'done') {
-    // TODO: 调用后端接口上传文件到云存储 (如阿里云 OSS)
-    // formState.avatar = info.file.response.url;
-  }
-}
 
 // 密码表单状态
 const passwordForm = ref<UserPasswordForm>({
@@ -163,47 +137,18 @@ const handlePasswordReset = () => {
       >
         <div class="max-w-3xl">
           <div v-show="selectedKeys[0] === 'info'">
-            <div class="flex items-start gap-6 mb-8">
-              <div class="text-center">
-                <a-avatar :size="100" :src="''">
-                  <template #icon><UserOutlined /></template>
-                </a-avatar>
-                <div class="mt-4">
-                  <a-config-provider
-                    :theme="{
-                      components: {
-                        Button: {
-                          colorPrimary: '#1677ff'
-                        }
-                      }
-                    }"
-                  >
-                    <a-upload
-                      name="avatar"
-                      :show-upload-list="false"
-                      :before-upload="beforeUpload"
-                      @change="handleAvatarChange"
-                    >
-                      <a-button type="primary">上传新图片</a-button>
-                    </a-upload>
-                  </a-config-provider>
-                  <p class="mt-2 text-xs text-gray-400">JPG, GIF or PNG. Max size of 800K</p>
-                </div>
-              </div>
-            </div>
-
             <a-form :rules="rules" layout="vertical" :model="formState" @finish="handleSave">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+              <div class="grid grid-cols-1 gap-y-2 max-w-md">
                 <a-form-item label="用户姓名" name="name" required>
                   <a-input v-model:value="formState.name" placeholder="请输入姓名" />
                 </a-form-item>
 
                 <a-form-item label="邮箱地址" name="email">
-                  <a-input v-model:value="formState.email" placeholder="暂无此字段，需扩展" />
+                  <a-input v-model:value="formState.email" placeholder="邮箱地址，非必填" />
                 </a-form-item>
 
-                <a-form-item label="电话号码" name="phone" class="md:col-span-2">
-                  <a-input v-model:value="formState.phone" placeholder="暂无此字段，需扩展" />
+                <a-form-item label="电话号码" name="phone">
+                  <a-input v-model:value="formState.phone" placeholder="电话号码，非必填" />
                 </a-form-item>
               </div>
 
