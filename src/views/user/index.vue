@@ -119,10 +119,8 @@ const handleToggleState = (record: TableUserData) => {
       message.success(`${actionText}成功`)
       pageQuery()
     })
-    .catch(() => {
-      // 降级处理，直接修改本地数据以供演示
-      record.state = newState
-      message.success(`${actionText}成功 (本地状态)`)
+    .catch((error) => {
+      console.log(error)
     })
 }
 

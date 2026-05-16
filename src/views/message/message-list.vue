@@ -2,7 +2,9 @@
 import { ref, onMounted } from 'vue'
 import { ExclamationCircleOutlined, NotificationOutlined } from '@ant-design/icons-vue'
 import type { MessageItem, SearchMessageForm } from '@/types/message'
-import { getMessageList, getUnreadCount } from '@/api/message'
+import { getMessageList, setMessageAllRead } from '@/api/message'
+import { useLayoutStore } from '@/stores/modules/layout'
+import { storeToRefs } from 'pinia'
 
 // 状态变量
 // 搜索
@@ -14,7 +16,9 @@ const searchForm = ref<SearchMessageForm>({
 const currentPage = ref(1)
 const total = ref(0)
 const messageList = ref<MessageItem[]>([])
-const unreadCount = ref(0)
+
+const layoutStore = useLayoutStore()
+const { unReadCount } = storeToRefs(layoutStore)
 
 // --- 业务逻辑 ---
 const handleSearch = () => {
@@ -25,9 +29,7 @@ const handleSearch = () => {
 }
 
 const handleUnreadCount = () => {
-  getUnreadCount().then((res) => {
-    unreadCount.value = res.data.data
-  })
+  layoutStore.getNewUnReadCount()
 }
 
 const handleTabChange = (key: number) => {
@@ -47,9 +49,10 @@ onMounted(() => {
  * 标记全部已读
  */
 const handleMarkAllRead = async () => {
-  // TODO: 调用标记已读 API
-  // await api.markAllAsRead();
-  console.log('Marking all as read...')
+  setMessageAllRead().then(() => {
+    handleSearch()
+    handleUnreadCount()
+  })
 }
 </script>
 <template>
@@ -73,7 +76,7 @@ const handleMarkAllRead = async () => {
           >
             <a-tabs v-model:activeKey="searchForm.type" class="mb-4" @change="handleTabChange">
               <a-tab-pane :key="0" tab="全部消息" />
-              <a-tab-pane :key="1" :tab="unreadCount === 0 ? '未读' : `未读 (${unreadCount})`" />
+              <a-tab-pane :key="1" :tab="unReadCount === 0 ? '未读' : `未读 (${unReadCount})`" />
               <a-tab-pane :key="2" tab="已读" />
               <template #rightExtra>
                 <a-button type="link" size="small" @click="handleMarkAllRead">

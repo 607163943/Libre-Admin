@@ -69,5 +69,5 @@ export const getUnreadCount = () => {
 
 // 标记全部已读
 export const setMessageAllRead = () => {
-  return request.put<Result<void>>(`/message/user/read/all`)
+  return request.put<Result<void>>(`/message/read/all`)
 }

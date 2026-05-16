@@ -63,19 +63,19 @@ const handleOk = async () => {
     return
   }
   confirmLoading.value = true
-  try {
-    await assignUserRoles({
-      userId: props.userId,
-      roleIds: targetKeys.value.map(Number)
+  assignUserRoles({
+    userId: props.userId,
+    roleIds: targetKeys.value.map(Number)
+  })
+    .then(() => {
+      message.success('角色分配成功')
+      emit('success')
     })
-    message.success('角色分配成功')
-    emit('success')
-    handleCancel()
-  } catch {
-    message.error('角色分配失败')
-  } finally {
-    confirmLoading.value = false
-  }
+    .catch((error) => console.log(error))
+    .finally(() => {
+      confirmLoading.value = false
+      handleCancel()
+    })
 }
 
 // 取消
