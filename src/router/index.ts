@@ -6,7 +6,6 @@ import Book from '@/views/book/index.vue'
 import Author from '@/views/author/index.vue'
 import Publisher from '@/views/publisher/index.vue'
 import Lend from '@/views/lend/index.vue'
-import LendReview from '@/views/lend-review/index.vue'
 import Profile from '@/views/profile/index.vue'
 import Login from '@/views/login/index.vue'
 import Message from '@/views/message/index.vue'
@@ -52,11 +51,6 @@ const router = createRouter({
           path: 'lend',
           name: 'Lend',
           component: Lend
-        },
-        {
-          path: 'lend-review',
-          name: 'LendReview',
-          component: LendReview
         },
         {
           path: 'message',

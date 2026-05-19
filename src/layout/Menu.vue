@@ -5,8 +5,7 @@ import {
   BankOutlined,
   SwapOutlined,
   HomeOutlined,
-  MessageOutlined,
-  AuditOutlined
+  MessageOutlined
 } from '@ant-design/icons-vue'
 import { ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
@@ -63,12 +62,6 @@ const menuItems = [
     keyName: 'Lend',
     icon: SwapOutlined,
     label: '借阅管理'
-  },
-  {
-    key: '/lend-review',
-    keyName: 'LendReview',
-    icon: AuditOutlined,
-    label: '借阅审核'
   },
   {
     key: '/message',
